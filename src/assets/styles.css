@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Nunito+Sans:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-body antialiased bg-background-beige text-text-charcoal;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-display;
+    }
+}
+
+@layer components {
+    .font-display {
+        font-family: "Playfair Display", serif;
+    }
+
+    .font-body {
+        font-family: "Nunito Sans", sans-serif;
+    }
+
+    .rating-stars input[type="radio"] {
+        display: none;
+    }
+
+    .rating-stars label {
+        font-size: 2.5rem;
+        color: #c6d3c1;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        transform-origin: center;
+    }
+
+    .rating-stars:hover label {
+        color: #e5a65a;
+    }
+
+    .rating-stars label:hover ~ label {
+        color: #c6d3c1;
+    }
+
+    .rating-stars input[type="radio"]:checked ~ label {
+        color: #e5a65a;
+        transform: scale(1.25);
+        animation: glowing-star 1.5s ease-in-out infinite;
+    }
+
+    .progress-bar-fill {
+        animation: fill-progress 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .input-field input:focus,
+    .input-field textarea:focus {
+        box-shadow: 0 0 0 2px rgba(30, 77, 59, 0.25);
+        outline: none;
+    }
+
+    .material-symbols-outlined {
+        font-family: "Material Symbols Outlined";
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: "liga";
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+@layer utilities {
+    @keyframes glowing-star {
+        0%,
+        100% {
+            text-shadow:
+                0 0 5px #e5a65a,
+                0 0 10px #e5a65a;
+        }
+        50% {
+            text-shadow:
+                0 0 20px #e5a65a,
+                0 0 30px #e5a65a;
+        }
+    }
+
+    @keyframes fill-progress {
+        from {
+            width: 0%;
+        }
+    }
+}

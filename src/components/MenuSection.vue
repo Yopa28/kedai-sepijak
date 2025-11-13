@@ -50,13 +50,14 @@
                 />
             </div>
 
-            <button
+            <router-link
+                to="/menu"
                 class="mt-8 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-transparent border-2 border-secondary-sage text-secondary-sage text-base font-bold leading-normal tracking-wide transition-all hover:bg-secondary-sage hover:text-primary-green hover:scale-105"
                 data-aos="fade-up"
                 data-aos-delay="400"
             >
                 <span class="truncate">See All Menu</span>
-            </button>
+            </router-link>
         </div>
     </section>
 </template>

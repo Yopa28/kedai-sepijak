@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import "./assets/styles.css";
 import App from "./App.vue";
 import router from "./router";
@@ -8,6 +9,12 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 const app = createApp(App);
+
+// Create Pinia instance
+const pinia = createPinia();
+
+// Use Pinia store
+app.use(pinia);
 
 // Use Vue Router
 app.use(router);

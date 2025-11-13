@@ -1,14 +1,16 @@
 <template>
     <div class="relative flex min-h-screen w-full flex-col">
-        <HeaderComponent />
+        <HeaderComponent v-if="!isAdminRoute" />
         <main class="flex-grow">
             <router-view />
         </main>
-        <FooterComponent />
+        <FooterComponent v-if="!isAdminRoute" />
     </div>
 </template>
 
 <script>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import HeaderComponent from "./components/HeaderComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
 
@@ -17,6 +19,18 @@ export default {
     components: {
         HeaderComponent,
         FooterComponent,
+    },
+    setup() {
+        const route = useRoute();
+
+        // Check if current route is admin route
+        const isAdminRoute = computed(() => {
+            return route.path.startsWith("/admin");
+        });
+
+        return {
+            isAdminRoute,
+        };
     },
 };
 </script>

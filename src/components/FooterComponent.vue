@@ -6,11 +6,11 @@
                     <h4
                         class="font-display text-xl font-bold text-background-beige"
                     >
-                        About Kedai Sepijak
+                        Tentang Kedai Sepijak
                     </h4>
                     <p class="text-sm leading-relaxed text-secondary-sage">
-                        A space to pause, reconnect with nature, taste, and
-                        story.
+                        Ruang untuk berhenti sejenak, terhubung kembali dengan
+                        alam, rasa, dan cerita.
                     </p>
                 </div>
 
@@ -18,7 +18,7 @@
                     <h4
                         class="font-display text-xl font-bold text-background-beige"
                     >
-                        Quick Links
+                        Tautan Cepat
                     </h4>
                     <a
                         v-for="link in quickLinks"
@@ -34,7 +34,7 @@
                     <h4
                         class="font-display text-xl font-bold text-background-beige"
                     >
-                        Contact & Hours
+                        Kontak & Jam Buka
                     </h4>
                     <p class="text-sm text-secondary-sage">
                         {{ contactInfo.address }}
@@ -51,10 +51,10 @@
                     <h4
                         class="font-display text-xl font-bold text-background-beige"
                     >
-                        Newsletter
+                        Buletin
                     </h4>
                     <p class="text-sm leading-relaxed text-secondary-sage">
-                        Get info on the latest events & promos.
+                        Dapatkan informasi terbaru tentang acara dan promosi.
                     </p>
                     <form @submit.prevent="handleNewsletter" class="flex mt-2">
                         <input
@@ -77,7 +77,7 @@
             <div
                 class="mt-16 border-t border-background-beige/20 pt-8 text-center text-sm text-secondary-sage"
             >
-                <p>© 2025 Kedai Sepijak Purwokerto — All rights reserved.</p>
+                <p>© 2025 Kedai Sepijak Purwokerto — Sandyyopa.</p>
             </div>
         </div>
     </footer>
@@ -99,7 +99,7 @@ export default {
                 address:
                     "Sky Lounge Taman Mas Kemambang, Bancarkembar, Purwokerto Utara, Banyumas, Jawa Tengah, Indonesia",
                 phone: "08123456789",
-                hours: "DAILY OPEN | 08.00 - 01.00",
+                hours: "Daily Open | 08.00 - 01.00",
             },
         };
     },

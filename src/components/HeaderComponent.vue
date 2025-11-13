@@ -25,12 +25,13 @@
                 >
                     Home
                 </router-link>
-                <a
-                    href="/#menu"
+                <router-link
+                    to="/menu"
                     class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
+                    :class="{ 'text-accent-amber': $route.path === '/menu' }"
                 >
                     Menu
-                </a>
+                </router-link>
                 <router-link
                     to="/feedback"
                     class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
@@ -88,13 +89,14 @@
                     >
                         Home
                     </router-link>
-                    <a
-                        href="/#menu"
+                    <router-link
+                        to="/menu"
                         @click="closeMobileMenu"
                         class="text-base font-medium text-secondary-sage hover:text-accent-amber transition-colors py-2"
+                        :class="{ 'text-accent-amber': $route.path === '/menu' }"
                     >
                         Menu
-                    </a>
+                    </router-link>
                     <router-link
                         to="/feedback"
                         @click="closeMobileMenu"

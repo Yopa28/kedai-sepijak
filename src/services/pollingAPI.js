@@ -1,139 +1,216 @@
-// ============================================
-// Polling API Service
-// Kedai Sepijak Frontend
-// ============================================
-
+// pollingAPI.js
 import api, { handleApiResponse, handleApiError } from './api';
 
-/**
- * Get all active poll options with results
- * @returns {Promise}
- */
-export const getAllPollOptions = async () => {
-    try {
-        const response = await api.get('/polling');
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+//
+// ---------- Helpers ----------
+//
+const get = async (url, config) => {
+  try {
+    const res = await api.get(url, config);
+    return handleApiResponse(res);
+  } catch (err) {
+    return handleApiError(err);
+  }
 };
 
-/**
- * Get poll option by ID
- * @param {number} id - Poll option ID
- * @returns {Promise}
- */
-export const getPollOptionById = async (id) => {
-    try {
-        const response = await api.get(`/polling/${id}`);
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+const post = async (url, payload) => {
+  try {
+    const res = await api.post(url, payload);
+    return handleApiResponse(res);
+  } catch (err) {
+    return handleApiError(err);
+  }
 };
 
-/**
- * Submit vote with customer validation
- * @param {Object} voteData - Vote data
- * @param {number} voteData.poll_option_id - Poll option ID
- * @param {string} voteData.customer_name - Customer name (min 3 characters)
- * @param {string} voteData.customer_phone - Customer phone (min 10 digits)
- * @param {string} voteData.customer_email - Customer email (optional)
- * @returns {Promise}
- */
-export const submitVote = async (voteData) => {
-    try {
-        const response = await api.post('/polling/vote', voteData);
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+const put = async (url, payload) => {
+  try {
+    const res = await api.put(url, payload);
+    return handleApiResponse(res);
+  } catch (err) {
+    return handleApiError(err);
+  }
 };
 
-/**
- * Check if customer has voted
- * @param {string} phone - Customer phone number
- * @returns {Promise}
- */
-export const checkVoteStatus = async (phone) => {
-    try {
-        const response = await api.get('/polling/check-vote', {
-            params: { phone }
-        });
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+const del = async (url) => {
+  try {
+    const res = await api.delete(url);
+    return handleApiResponse(res);
+  } catch (err) {
+    return handleApiError(err);
+  }
 };
 
-/**
- * Get poll statistics
- * @returns {Promise}
- */
+const patch = async (url, payload) => {
+  try {
+    const res = await api.patch(url, payload);
+    return handleApiResponse(res);
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+//
+// ---------- Admin endpoints (dipakai AdminPolls.vue) ----------
+//
+
+// Ambil semua polling (beserta options & total_votes)
+// GET /api/polling  (opsional: ?active=1 untuk hanya yang aktif)
+// Di pollingAPI.js
+export const listPolls = async (params = {}) => {
+  try {
+    const res = await api.get('/polling', { params });
+    const processed = handleApiResponse(res);
+    // Kalo sukses, return array nya
+    if (processed.success && Array.isArray(processed.data)) {
+      return processed.data; // <-- Ini return array [ ... ]
+    }
+    // Kalo gak sukses, lempar error biar masuk ke catch di AdminPolls.vue
+    throw new Error(processed.message || 'Respon API tidak valid');
+  } catch (err) {
+    // Handle error
+    return handleApiError(err); // <-- Ini return object error
+  }
+};
+
+// ... sisanya biarkan sama ...
+// Buat fungsi-fungsi lainnya (createPoll, togglePoll, dll) bisa kamu ubah juga
+// biar return data yang bener (misalnya buat createPoll return data polling yang dibuat)
+// supaya AdminPolls.vue bisa handle responnya dengan benar.
+
+export const createPoll = async ({ question, options, is_active = true }) => {
+  try {
+    const res = await api.post('/polling', { question, options, is_active });
+    const processed = handleApiResponse(res);
+    if (processed.success && processed.data) {
+      return processed.data; // Return data polling yang dibuat
+    }
+    throw new Error(processed.message || 'Gagal membuat polling');
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+export const togglePoll = async (id) => {
+  try {
+    const res = await api.patch(`/polling/${id}/toggle`);
+    const processed = handleApiResponse(res);
+    if (processed.success && processed.data) {
+      return processed.data; // Return data polling yang diupdate
+    }
+    throw new Error(processed.message || 'Gagal mengubah status polling');
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+export const removePoll = async (id) => {
+  try {
+    const res = await api.delete(`/polling/${id}`);
+    const processed = handleApiResponse(res);
+    if (processed.success) {
+      return processed; // Bisa return pesan sukses
+    }
+    throw new Error(processed.message || 'Gagal menghapus polling');
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+export const getPoll = async (id) => {
+  try {
+    const res = await api.get(`/polling/${id}`);
+    const processed = handleApiResponse(res);
+    if (processed.success && processed.data) {
+      return processed.data; // Return data polling detail
+    }
+    throw new Error(processed.message || 'Gagal mengambil polling');
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+// ... sisanya ...
 export const getPollStatistics = async () => {
-    try {
-        const response = await api.get('/polling/statistics');
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+  return get('/polling/statistics');
 };
 
-/**
- * Create new poll option (Admin)
- * @param {Object} pollData - Poll option data
- * @param {string} pollData.name - Poll option name
- * @param {string} pollData.description - Description (optional)
- * @param {string} pollData.image_url - Image URL (optional)
- * @param {string} pollData.start_date - Start date (optional)
- * @param {string} pollData.end_date - End date (optional)
- * @returns {Promise}
- */
+//
+// ---------- Public / Voting (dipakai PollingCard.vue) ----------
+//
+// ... biarkan ini sama ...
+export const listActiveOptions = async () => {
+  return get('/polling');
+};
+
+export const checkVote = async (phone) => {
+  return get('/polling/check-vote', { params: { phone } });
+};
+
+export const submitVote = async ({ name, phone, email, option_id }) => {
+  return post('/polling/vote', {
+    customer_name: name?.trim(),
+    customer_phone: phone?.trim(),
+    customer_email: email?.trim() || undefined,
+    option_id
+  });
+};
+
+//
+// ---------- Backward-compat aliases (biar import lama gak crash) ----------
+//
+// ... biarkan ini sama ...
+export const getAllPollOptions = async () => {
+  return listActiveOptions();
+};
+
+export const getPollOptionById = async (id) => {
+  return getPoll(id);
+};
+
+export const submitVoteLegacy = async (voteData) => {
+  const mapped = {
+    option_id: voteData?.poll_option_id,
+    name: voteData?.customer_name,
+    phone: voteData?.customer_phone,
+    email: voteData?.customer_email
+  };
+  return submitVote(mapped);
+};
+
+export const checkVoteStatus = async (phone) => {
+  return checkVote(phone);
+};
+
 export const createPollOption = async (pollData) => {
-    try {
-        const response = await api.post('/polling', pollData);
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+  const question = pollData?.question || 'Polling';
+  const name = pollData?.name ? String(pollData.name) : 'Opsi 1';
+  const is_active = pollData?.is_active ?? true;
+  return createPoll({ question, options: [name], is_active });
 };
 
-/**
- * Update poll option (Admin)
- * @param {number} id - Poll option ID
- * @param {Object} pollData - Updated poll data
- * @returns {Promise}
- */
 export const updatePollOption = async (id, pollData) => {
-    try {
-        const response = await api.put(`/polling/${id}`, pollData);
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+  return put(`/polling/${id}`, pollData);
 };
 
-/**
- * Delete poll option (Admin)
- * @param {number} id - Poll option ID
- * @returns {Promise}
- */
 export const deletePollOption = async (id) => {
-    try {
-        const response = await api.delete(`/polling/${id}`);
-        return handleApiResponse(response);
-    } catch (error) {
-        return handleApiError(error);
-    }
+  return removePoll(id);
 };
 
 export default {
-    getAllPollOptions,
-    getPollOptionById,
-    submitVote,
-    checkVoteStatus,
-    getPollStatistics,
-    createPollOption,
-    updatePollOption,
-    deletePollOption
+  listPolls,
+  createPoll,
+  togglePoll,
+  removePoll,
+  getPoll,
+  getPollStatistics,
+  listActiveOptions,
+  checkVote,
+  submitVote,
+  getAllPollOptions,
+  getPollOptionById,
+  submitVoteLegacy,
+  checkVoteStatus,
+  createPollOption,
+  updatePollOption,
+  deletePollOption
 };

@@ -9,8 +9,18 @@
       </p>
     </div>
 
+    <!-- Loading State -->
+    <div v-if="loading" class="text-center py-8">
+      <p class="text-text-charcoal">Loading polling data...</p>
+    </div>
+
+    <!-- Error State -->
+    <div v-else-if="error" class="text-center py-8">
+      <p class="text-red-500">{{ error }}</p>
+    </div>
+
     <!-- Customer Data Form (shown before voting) -->
-    <div v-if="!hasSubmittedData" class="flex flex-col gap-5 mt-4">
+    <div v-else-if="!hasSubmittedData" class="flex flex-col gap-5 mt-4">
       <p class="text-center text-sm font-semibold text-primary-green">
         Please fill in your details to vote
       </p>
@@ -78,13 +88,18 @@
     </div>
 
     <!-- Polling Section (shown after customer data submitted) -->
-    <div v-else>
+    <div v-else-if="pollLoaded">
       <!-- Customer Info Display -->
       <div class="bg-secondary-sage/20 rounded-lg p-4 mb-4">
         <p class="text-sm font-semibold text-primary-green mb-1">Voting as:</p>
         <p class="text-text-charcoal font-medium">{{ customerData.name }}</p>
         <p class="text-text-charcoal/70 text-sm">{{ customerData.phone }}</p>
       </div>
+
+      <!-- Poll Question -->
+      <h4 class="text-center text-lg font-semibold text-text-charcoal mb-4">
+        {{ currentPollQuestion }}
+      </h4>
 
       <!-- Poll Results -->
       <div class="flex flex-col gap-5 mt-4">
@@ -134,10 +149,21 @@
         Vote again with different account
       </button>
     </div>
+
+    <!-- No Active Poll Message -->
+    <div v-else-if="!pollLoaded && !loading && !error" class="text-center py-8">
+      <p class="text-text-charcoal">Tidak ada polling aktif saat ini.</p>
+    </div>
   </div>
 </template>
 
 <script>
+
+import api from '@/services/api';
+
+import { handleApiResponse, handleApiError } from '@/services/api';
+
+
 export default {
   name: 'PollingCard',
   data() {
@@ -145,16 +171,17 @@ export default {
       hasSubmittedData: false,
       hasVoted: false,
       votedFor: null,
+      pollLoaded: false,
+      loading: true,
+      error: null,
+      currentPollId: null,
+      currentPollQuestion: '',
       customerData: {
         name: '',
         phone: '',
         email: ''
       },
-      pollOptions: [
-        { id: 1, name: 'Jazzy Brewers 🎷', percentage: 45 },
-        { id: 2, name: 'Latte Art Workshop ☕', percentage: 35 },
-        { id: 3, name: 'Poetry Night ✍️', percentage: 20 }
-      ]
+      pollOptions: []
     }
   },
   computed: {
@@ -164,49 +191,100 @@ export default {
     }
   },
   methods: {
+    async loadPollingData() {
+      try {
+        this.loading = true;
+        this.error = null;
+
+        // Gunakan api.get
+        const response = await api.get('/polling/active');
+        // Gunakan handleApiResponse
+        const processedResponse = handleApiResponse(response);
+
+        if (processedResponse.success && processedResponse.data) {
+          const poll = processedResponse.data;
+          this.currentPollId = poll.id;
+          this.currentPollQuestion = poll.question;
+
+          this.pollOptions = poll.options.map(opt => ({
+            id: opt.id,
+            name: opt.option_text,
+            votes: opt.votes,
+            percentage: poll.total_votes > 0 ? Math.round((opt.votes / poll.total_votes) * 100) : 0
+          }));
+
+          this.pollLoaded = true;
+        } else {
+          this.pollLoaded = false;
+          // Jangan set error jika cuma gak ada polling aktif
+          // this.error = processedResponse.message || 'Tidak ada polling aktif.';
+        }
+      } catch (err) {
+        console.error('Load polling error:', err);
+        // Gunakan handleApiError
+        const processedError = handleApiError(err);
+        this.error = processedError.message || 'Terjadi kesalahan saat mengambil data polling.';
+        this.pollLoaded = false;
+      } finally {
+        this.loading = false;
+      }
+    },
+
     submitCustomerData() {
       if (!this.isCustomerDataValid) return
-
       this.hasSubmittedData = true
       console.log('Customer data submitted:', this.customerData)
     },
-    vote(optionId) {
-      if (this.hasVoted) return
 
-      this.hasVoted = true
-      this.votedFor = optionId
+   async vote(optionId) {
+  if (this.hasVoted || !this.hasSubmittedData || !this.currentPollId) return;
 
-      // Update percentages (simplified logic)
-      const option = this.pollOptions.find(o => o.id === optionId)
-      if (option) {
-        option.percentage += 1
-        // Recalculate others
-        const total = this.pollOptions.reduce((sum, o) => sum + o.percentage, 0)
-        this.pollOptions.forEach(o => {
-          o.percentage = Math.round((o.percentage / total) * 100)
-        })
-      }
+  try {
+    // Gunakan api.post
+    const response = await api.post(`/polling/${this.currentPollId}/vote`, {
+      name: this.customerData.name,
+      phone: this.customerData.phone,
+      email: this.customerData.email,
+      option_id: optionId
+    });
+    // Gunakan handleApiResponse
+    const processedResponse = handleApiResponse(response);
 
-      console.log('Vote submitted:', {
-        customer: this.customerData,
-        votedFor: optionId
-      })
+    if (processedResponse.success) {
+      this.hasVoted = true;
+      this.votedFor = optionId;
+      // alert(processedResponse.message || `Terima kasih ${this.customerData.name}! Suaramu telah direkam.`);
+      await this.loadPollingData();
+    } else {
+      // Handle error dari API
+      alert(processedResponse.message || 'Gagal menyimpan suara.');
+    }
+  } catch (err) {
+    console.error('Vote error:', err);
+    // Gunakan handleApiError
+    const processedError = handleApiError(err);
+    // Cek apakah errornya karena konflik (sudah vote)
+    if (processedError.error?.status === 409) {
+      alert(processedError.message || 'Nomor ini sudah melakukan vote.');
+    } else {
+      alert(processedError.message || 'Terjadi kesalahan saat mengirim suara.');
+    }
+  }
+},
 
-      // Show success message
-      setTimeout(() => {
-        alert(`Thank you ${this.customerData.name}! Your vote has been recorded.`)
-      }, 300)
-    },
     resetPoll() {
-      this.hasSubmittedData = false
-      this.hasVoted = false
-      this.votedFor = null
+      this.hasSubmittedData = false;
+      this.hasVoted = false;
+      this.votedFor = null;
       this.customerData = {
         name: '',
         phone: '',
         email: ''
       }
     }
+  },
+  async mounted() {
+    await this.loadPollingData();
   }
 }
 </script>

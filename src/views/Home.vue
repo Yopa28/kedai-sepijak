@@ -29,11 +29,12 @@
                     <h2
                         class="font-display text-4xl md:text-5xl font-bold text-background-beige mb-4"
                     >
-                        Share Your Experience
+                        Bagikan Pengalaman Anda
                     </h2>
                     <p class="text-secondary-sage text-lg max-w-2xl mx-auto">
-                        We value your opinion! Help us improve by sharing your
-                        feedback or vote for the next exciting event.
+                        Kami menghargai pendapat Anda! Bantu kami meningkatkan
+                        kualitas dengan membagikan masukan Anda atau memilih
+                        acara menarik berikutnya.
                     </p>
                 </div>
 
@@ -57,17 +58,18 @@
                         <h3
                             class="font-display text-2xl font-bold text-background-beige mb-4"
                         >
-                            Feedback & Suggestions
+                            Umpan Balik & Saran
                         </h3>
                         <p class="text-background-beige/80 mb-6">
-                            Share your dining experience, rate our service, and
-                            help us serve you better. Your feedback matters!
+                            Bagikan Pengalaman Anda, Beri nilai layanan kami,
+                            dan bantu kami melayani Anda dengan lebih baik.
+                            Masukan Anda penting!
                         </p>
                         <router-link
                             to="/feedback"
                             class="inline-flex items-center gap-2 bg-accent-amber text-primary-green font-bold px-6 py-3 rounded-full hover:bg-background-beige transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                         >
-                            <span>Give Feedback</span>
+                            <span>Berikan Umpan Balik</span>
                             <span class="material-symbols-outlined"
                                 >arrow_forward</span
                             >
@@ -91,17 +93,17 @@
                         <h3
                             class="font-display text-2xl font-bold text-background-beige mb-4"
                         >
-                            Vote for Next Event
+                            Pilih Acara Berikutnya
                         </h3>
                         <p class="text-background-beige/80 mb-6">
-                            Help us choose the next exciting event! Your vote
-                            determines what happens at Kedai Sepijak.
+                            Bantu kami memilih acara seru berikutnya! Suara Anda
+                            menentukan apa yang akan terjadi di Kedai Sepijak.
                         </p>
                         <router-link
                             to="/polling"
                             class="inline-flex items-center gap-2 bg-accent-amber text-primary-green font-bold px-6 py-3 rounded-full hover:bg-background-beige transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                         >
-                            <span>Vote Now</span>
+                            <span>Pilih Sekarang</span>
                             <span class="material-symbols-outlined"
                                 >arrow_forward</span
                             >

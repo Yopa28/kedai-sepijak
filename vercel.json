@@ -1,4 +1,17 @@
 {
+    "builds": [
+        {
+            "src": "frontend/package.json",
+            "config": {
+                "distDir": "dist",
+                "buildCommand": "npm run build"
+            }
+        },
+        {
+            "src": "api/index.js",
+            "use": "@vercel/node"
+        }
+    ],
     "rewrites": [
         {
             "source": "/api/(.*)",
@@ -6,7 +19,7 @@
         },
         {
             "source": "/(.*)",
-            "destination": "/index.html"
+            "destination": "/frontend/dist/index.html"
         }
     ]
 }

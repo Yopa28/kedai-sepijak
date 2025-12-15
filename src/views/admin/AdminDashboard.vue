@@ -242,11 +242,16 @@
                         :key="poll.id"
                         class="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                        <h4 class="font-medium text-gray-900 text-sm mb-2">{{ poll.title }}</h4>
-                        <p class="text-xs text-gray-600 mb-2">{{ poll.description }}</p>
+                        <h4 class="font-medium text-gray-900 text-sm mb-1">{{ poll.title }}</h4>
+                        <p class="text-xs text-gray-600 mb-2">
+                            {{ poll.description || 'Belum ada deskripsi.' }}
+                        </p>
                         <div class="flex items-center justify-between text-xs">
-                            <span class="text-gray-500">
-                                {{ poll.options ? poll.options.length : 0 }} opsi
+                            <span class="text-gray-500 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ poll.total_votes || 0 }} votes
                             </span>
                             <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">
                                 Aktif

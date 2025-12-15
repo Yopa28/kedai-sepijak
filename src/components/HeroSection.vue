@@ -32,18 +32,15 @@
                 <!-- Left Content -->
                 <div class="text-center lg:text-left" data-aos="fade-right">
                     <div
-                        class="inline-block mb-4"
+                        class="inline-block mb-6"
                         data-aos="zoom-in"
                         data-aos-delay="200"
                     >
-                        <div
-                            class="bg-accent-amber/20 backdrop-blur-sm p-4 rounded-full inline-block"
-                        >
-                            <span
-                                class="material-symbols-outlined text-6xl text-accent-amber"
-                                >local_cafe</span
-                            >
-                        </div>
+                        <!-- <img 
+                            src="@/assets/logo-sepijak.png" 
+                            alt="Sepijak Logo" 
+                            class="h-40 w-auto drop-shadow-2xl"
+                        /> -->
                     </div>
                     <h1
                         class="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-background-beige mb-6 leading-tight drop-shadow-lg"
@@ -60,7 +57,8 @@
                         Kedai Ngopi | Kedai Makan | Ruang Bertemu | Ruang Kerja
                     </p>
                     <p
-                        class="font-body text-base md:text-lg text-background-beige/90 mb-8 max-w-2xl mx-auto lg:mx-0"
+                        class="font-body text-base md:text-lg text-background-beige mb-8 max-w-2xl mx-auto lg:mx-0"
+                        style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"
                         data-aos="fade-up"
                         data-aos-delay="500"
                     >
@@ -105,7 +103,7 @@
                             >
                                 5+
                             </div>
-                            <div class="text-sm text-background-beige/80">
+                            <div class="text-sm text-background-beige font-semibold" style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);">
                                 Tahun Berdiri
                             </div>
                         </div>
@@ -115,7 +113,7 @@
                             >
                                 50+
                             </div>
-                            <div class="text-sm text-background-beige/80">
+                            <div class="text-sm text-background-beige font-semibold" style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);">
                                 Menu Tersedia
                             </div>
                         </div>
@@ -125,7 +123,7 @@
                             >
                                 1000+
                             </div>
-                            <div class="text-sm text-background-beige/80">
+                            <div class="text-sm text-background-beige font-semibold" style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);">
                                 Pelanggan Puas
                             </div>
                         </div>
@@ -181,7 +179,7 @@
                     </div>
 
                     <!-- Floating Badge -->
-                    <div
+                    <!-- <div
                         class="absolute top-1/2 -left-5 transform -translate-y-1/2 bg-accent-amber text-primary-green rounded-2xl p-4 shadow-2xl"
                         data-aos="zoom-in"
                         data-aos-delay="800"
@@ -192,7 +190,7 @@
                             </div>
                             <div class="text-xs font-semibold mt-1">Rating</div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Decorative circles -->
                     <div
@@ -207,72 +205,72 @@
             <!-- Features Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 lg:mt-32">
                 <div
-                    class="group relative p-8 rounded-2xl bg-white/10 backdrop-blur-lg border border-background-beige/20 hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
+                    class="group relative p-8 rounded-2xl bg-primary-green/40 backdrop-blur-lg border border-background-beige/30 hover:bg-primary-green/50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
                     data-aos="fade-up"
                     data-aos-delay="100"
                 >
                     <div
-                        class="bg-accent-amber/20 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+                        class="bg-accent-amber/30 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
                     >
                         <span
-                            class="material-symbols-outlined text-4xl text-accent-amber"
+                            class="material-symbols-outlined text-4xl text-accent-amber drop-shadow-lg"
                             >grain</span
                         >
                     </div>
                     <h3
-                        class="font-display text-xl font-bold text-background-beige mb-3"
+                        class="font-display text-xl font-bold text-background-beige mb-3 drop-shadow-md"
                     >
                         Biji Kopi Pilihan
                     </h3>
-                    <p class="font-body text-background-beige/80 text-sm">
+                    <p class="font-body text-background-beige text-sm font-medium" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">
                         Dipilih langsung dari petani lokal terbaik untuk
                         menghasilkan cita rasa kopi yang sempurna
                     </p>
                 </div>
 
                 <div
-                    class="group relative p-8 rounded-2xl bg-white/10 backdrop-blur-lg border border-background-beige/20 hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
+                    class="group relative p-8 rounded-2xl bg-primary-green/40 backdrop-blur-lg border border-background-beige/30 hover:bg-primary-green/50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
                     data-aos="fade-up"
                     data-aos-delay="200"
                 >
                     <div
-                        class="bg-accent-amber/20 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+                        class="bg-accent-amber/30 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
                     >
                         <span
-                            class="material-symbols-outlined text-4xl text-accent-amber"
+                            class="material-symbols-outlined text-4xl text-accent-amber drop-shadow-lg"
                             >favorite</span
                         >
                     </div>
                     <h3
-                        class="font-display text-xl font-bold text-background-beige mb-3"
+                        class="font-display text-xl font-bold text-background-beige mb-3 drop-shadow-md"
                     >
                         Dibuat dengan Cinta
                     </h3>
-                    <p class="font-body text-background-beige/80 text-sm">
+                    <p class="font-body text-background-beige text-sm font-medium" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">
                         Setiap cangkir diseduh dengan perhatian penuh oleh
                         barista berpengalaman kami
                     </p>
                 </div>
 
                 <div
-                    class="group relative p-8 rounded-2xl bg-white/10 backdrop-blur-lg border border-background-beige/20 hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
+                    class="group relative p-8 rounded-2xl bg-primary-green/40 backdrop-blur-lg border border-background-beige/30 hover:bg-primary-green/50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
                     data-aos="fade-up"
                     data-aos-delay="300"
                 >
                     <div
-                        class="bg-accent-amber/20 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+                        class="bg-accent-amber/30 w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
                     >
                         <span
-                            class="material-symbols-outlined text-4xl text-accent-amber"
+                            class="material-symbols-outlined text-4xl text-accent-amber drop-shadow-lg"
                             >groups</span
                         >
                     </div>
                     <h3
-                        class="font-display text-xl font-bold text-background-beige mb-3"
+                        class="font-display text-xl font-bold text-background-beige mb-3 drop-shadow-md"
                     >
                         Suasana Hangat
                     </h3>
-                    <p class="font-body text-background-beige/80 text-sm">
+                    <p class="font-body text-background-beige text-sm font-medium" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">
                         Tempat berkumpul yang nyaman untuk semua kalangan,
                         keluarga, teman, atau rekan kerja
                     </p>

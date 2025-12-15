@@ -16,7 +16,7 @@
                         <span class="font-semibold">Back to Home</span>
                     </router-link>
                     <h1
-                        class="font-display text-2xl font-bold text-background-beige"
+                        class="font-display text-2x1 font-bold text-background-beige"
                     >
                         Feedback & Suggestions
                     </h1>
@@ -151,7 +151,7 @@
                             class="font-display text-xl font-bold text-primary-green mb-4 flex items-center gap-2"
                         >
                             <span class="material-symbols-outlined">info</span>
-                            What Happens Next?
+                            Apa yang terjadi selanjutnya?
                         </h3>
                         <ul class="space-y-3 text-text-charcoal/80">
                             <li class="flex items-start gap-3">
@@ -160,8 +160,7 @@
                                     >check_circle</span
                                 >
                                 <span
-                                    >Your feedback is reviewed by our management
-                                    team within 24 hours</span
+                                    >Masukan Anda akan ditinjau oleh tim manajemen kami dalam 24 jam</span
                                 >
                             </li>
                             <li class="flex items-start gap-3">
@@ -170,8 +169,7 @@
                                     >check_circle</span
                                 >
                                 <span
-                                    >We use your input to improve our service
-                                    and menu offerings</span
+                                    >Kami menggunakan masukan Anda untuk meningkatkan layanan dan pilihan menu kami</span
                                 >
                             </li>
                             <li class="flex items-start gap-3">
@@ -180,8 +178,7 @@
                                     >check_circle</span
                                 >
                                 <span
-                                    >Outstanding suggestions may be implemented
-                                    and you'll be credited</span
+                                    >Saran yang luar biasa dapat diterapkan dan Anda akan diberikan diskon</span
                                 >
                             </li>
                             <li class="flex items-start gap-3">
@@ -190,8 +187,7 @@
                                     >check_circle</span
                                 >
                                 <span
-                                    >If you provide contact info, we may reach
-                                    out for clarification or follow-up</span
+                                    >Jika Anda memberikan informasi kontak, kami mungkin akan menghubungi untuk klarifikasi atau tindak lanjut</span
                                 >
                             </li>
                         </ul>
@@ -210,7 +206,7 @@
                                 1000+
                             </div>
                             <div class="text-sm text-text-charcoal/70">
-                                Feedback Received
+                                Umpan Balik Diterima
                             </div>
                         </div>
                         <div
@@ -224,7 +220,7 @@
                                 4.8
                             </div>
                             <div class="text-sm text-text-charcoal/70">
-                                Average Rating
+                                Rating Rata-Rata
                             </div>
                         </div>
                         <div
@@ -238,7 +234,7 @@
                                 95%
                             </div>
                             <div class="text-sm text-text-charcoal/70">
-                                Satisfaction Rate
+                                Tingkat Kepuasan
                             </div>
                         </div>
                         <div
@@ -252,7 +248,7 @@
                                 24h
                             </div>
                             <div class="text-sm text-text-charcoal/70">
-                                Response Time
+                                Waktu Tanggapan
                             </div>
                         </div>
                     </div>
@@ -264,13 +260,13 @@
                         data-aos-delay="800"
                     >
                         <p class="text-text-charcoal/70 mb-6">
-                            Want to participate in our events?
+                            Ingin ikut serta dalam acara kami?
                         </p>
                         <router-link
                             to="/polling"
                             class="inline-flex items-center gap-2 bg-primary-green text-background-beige font-bold px-8 py-4 rounded-full hover:bg-accent-amber hover:text-primary-green transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                         >
-                            <span>Vote for Next Event</span>
+                            <span>Pilih Acara Berikutnya</span>
                             <span class="material-symbols-outlined"
                                 >how_to_vote</span
                             >
@@ -298,5 +294,40 @@ export default {
 </script>
 
 <style scoped>
+.feedback-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--color-primary-green, #2d5016);
+    background: white;
+    color: var(--color-primary-green, #2d5016);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.tab-button:hover {
+    background: var(--color-primary-green, #2d5016);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.tab-button.active {
+    background: var(--color-primary-green, #2d5016);
+    color: white;
+    box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3);
+}
+
 /* Additional styles if needed */
 </style>

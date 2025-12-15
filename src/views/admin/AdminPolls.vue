@@ -280,7 +280,7 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
       @click.self="closeResultsModal"
     >
-      <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6">
+      <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold text-gray-900">Hasil Polling</h3>
           <button @click="closeResultsModal" class="text-gray-400 hover:text-gray-600">
@@ -300,7 +300,45 @@
             </div>
           </div>
 
-          <div class="space-y-4">
+          <!-- Tab Navigation -->
+          <div class="border-b border-gray-200 mb-6">
+            <nav class="-mb-px flex space-x-8">
+              <button
+                @click="selectedTab = 'overview'"
+                class="py-2 px-1 border-b-2 font-medium text-sm transition-colors"
+                :class="selectedTab === 'overview' 
+                  ? 'border-purple-500 text-purple-600' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+              >
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Result Overview
+                </div>
+              </button>
+              <button
+                @click="selectedTab = 'voters'"
+                class="py-2 px-1 border-b-2 font-medium text-sm transition-colors"
+                :class="selectedTab === 'voters' 
+                  ? 'border-purple-500 text-purple-600' 
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+              >
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  Voter Data
+                  <span v-if="voters.length > 0" class="ml-1 bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full text-xs">
+                    {{ voters.length }}
+                  </span>
+                </div>
+              </button>
+            </nav>
+          </div>
+
+          <!-- Tab Content -->
+          <div v-if="selectedTab === 'overview'" class="space-y-4">
             <div
               v-for="(option, index) in selectedPoll.options"
               :key="option.id"
@@ -341,6 +379,71 @@
                     {{ option.votes }}
                   </span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-else-if="selectedTab === 'voters'" class="space-y-4">
+            <div v-if="voters.length === 0" class="text-center py-8 bg-gray-50 rounded-lg">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada voter</h3>
+              <p class="mt-1 text-sm text-gray-500">Belum ada yang melakukan voting pada polling ini.</p>
+            </div>
+
+            <div v-else class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Phone/Contact
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Voted For
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr v-for="(voter, index) in voters" :key="index" class="hover:bg-gray-50">
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                          <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-purple-100 rounded-full">
+                            <span class="text-purple-600 font-medium text-sm">
+                              {{ voter.voter_name.charAt(0).toUpperCase() }}
+                            </span>
+                          </div>
+                          <div class="ml-4">
+                            <div class="text-sm font-medium text-gray-900">
+                              {{ voter.voter_name }}
+                            </div>
+                            <div class="text-sm text-gray-500" v-if="voter.voter_email !== '-'">
+                              {{ voter.voter_email }}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">{{ voter.voter_phone }}</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          {{ voter.option_name }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ formatDateTime(voter.created_at) }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -397,6 +500,7 @@ import {
   deletePollOption as apiDeletePoll,
   getPoll as apiGetPollById
 } from '@/services/pollingAPI'
+import { getPollVotes as apiGetPollVotes } from '@/services/pollingAPI'
 
 // State
 const polls = ref([])
@@ -405,8 +509,10 @@ const showCreateModal = ref(false)
 const showResultsModal = ref(false)
 const showDeleteConfirm = ref(false)
 const selectedPoll = ref(null)
+const selectedTab = ref('overview')
 const pollToDelete = ref(null)
 const loading = ref(false)
+const voters = ref([])
 const submitting = ref(false)
 const pollForm = ref({
   question: '',
@@ -532,14 +638,23 @@ async function togglePollStatus(poll) {
 
 async function viewResults(poll) {
   try {
-    const detail = await apiGetPollById(poll.id)
-    // Pastiin detail adalah object dan bukan error object
-    if (detail && typeof detail === 'object' && detail.hasOwnProperty('id')) {
-      selectedPoll.value = detail
-      showResultsModal.value = true
-    } else {
-      throw new Error(detail?.message || 'Respon API tidak valid')
+    // Ambil detail poll dan daftar voter sekaligus (jika tersedia)
+    const [detail, votesData] = await Promise.all([
+      apiGetPollById(poll.id),
+      apiGetPollVotes(poll.id)
+    ])
+
+    if (!(detail && typeof detail === 'object' && detail.hasOwnProperty('id'))) {
+      throw new Error(detail?.message || 'Respon API detail tidak valid')
     }
+
+    selectedPoll.value = detail
+    // normalize votes list (API may return { votes: [...] } )
+    voters.value = (votesData && votesData.votes) ? votesData.votes : (votesData && Array.isArray(votesData) ? votesData : [])
+    // attach to selectedPoll for convenience
+    selectedPoll.value.votes = voters.value
+    selectedTab.value = 'overview'
+    showResultsModal.value = true
   } catch (e) {
     console.error(e)
     alert(e.message || 'Gagal mengambil detail polling')
@@ -615,6 +730,30 @@ function formatDate(dateString) {
     }
   } catch (e) {
     console.error('Error parsing date:', e);
+    return 'Tanggal tidak valid';
+  }
+}
+
+function formatDateTime(dateString) {
+  if (!dateString) {
+    return '-';
+  }
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Tanggal tidak valid';
+    }
+
+    return date.toLocaleString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch (e) {
+    console.error('Error parsing datetime:', e);
     return 'Tanggal tidak valid';
   }
 }

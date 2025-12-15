@@ -53,22 +53,21 @@
                         data-aos="fade-up"
                         data-aos-delay="200"
                     >
-                        Help Us Choose the Next Event
+                        Bantu Kami Memilih Acara Berikutnya
                     </h1>
                     <p
                         class="text-xl text-secondary-sage mb-4"
                         data-aos="fade-up"
                         data-aos-delay="300"
                     >
-                        Your vote determines what happens at Kedai Sepijak
+                        Suara Anda menentukan apa yang terjadi di Kedai Sepijak
                     </p>
                     <p
                         class="text-lg text-background-beige/80 max-w-2xl mx-auto"
                         data-aos="fade-up"
                         data-aos-delay="400"
                     >
-                        Cast your vote to help us decide the next exciting event. Each
-                        customer gets one vote. Make your voice heard!
+                        Berikan suara Anda untuk membantu kami menentukan acara menarik berikutnya. Setiap pelanggan mendapatkan satu suara. Sampaikan pendapat Anda!
                     </p>
                 </div>
             </div>

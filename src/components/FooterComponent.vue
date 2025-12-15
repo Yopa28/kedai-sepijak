@@ -98,7 +98,7 @@ export default {
             contactInfo: {
                 address:
                     "Sky Lounge Taman Mas Kemambang, Bancarkembar, Purwokerto Utara, Banyumas, Jawa Tengah, Indonesia",
-                phone: "08123456789",
+                phone: "0888-2510-000",
                 hours: "Daily Open | 08.00 - 01.00",
             },
         };

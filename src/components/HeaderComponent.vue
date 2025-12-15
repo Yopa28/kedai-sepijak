@@ -8,12 +8,13 @@
             <!-- Logo -->
             <router-link
                 to="/"
-                class="flex items-center gap-3 text-background-beige hover:text-accent-amber transition-colors duration-300"
+                class="flex items-center gap-3 hover:scale-105 transition-transform duration-300"
             >
-                <span class="material-symbols-outlined text-3xl">eco</span>
-                <h2 class="text-2xl font-bold font-display tracking-wide">
-                    Sepijak
-                </h2>
+                <img 
+                    src="@/assets/logo-sepijak.png" 
+                    alt="Sepijak Logo" 
+                    class="h-14 w-auto drop-shadow-lg"
+                />
             </router-link>
 
             <!-- Navigation Links -->
@@ -67,11 +68,11 @@
             </button>
 
             <!-- CTA Button (Desktop) -->
-            <button
+            <!-- <button
                 class="hidden md:flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-accent-amber text-primary-green text-sm font-bold leading-normal tracking-wide transition-all duration-300 hover:bg-background-beige hover:shadow-lg hover:shadow-accent-amber/30"
             >
                 <span class="truncate"></span>
-            </button>
+            </button> -->
         </div>
 
         <!-- Mobile Menu -->
@@ -124,11 +125,11 @@
                     >
                         Contact
                     </a>
-                    <button
+                    <!-- <button
                         class="mt-4 w-full flex items-center justify-center rounded-full py-3 px-5 bg-accent-amber text-primary-green text-sm font-bold leading-normal tracking-wide transition-all duration-300 hover:bg-background-beige"
                     >
                         <span>Order Now</span>
-                    </button>
+                    </button> -->
                 </nav>
             </div>
         </transition>

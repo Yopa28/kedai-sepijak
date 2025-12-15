@@ -109,9 +109,9 @@ export default {
                 address:
                     "Sky Lounge Taman Mas Kemambang, Bancarkembar, Purwokerto Utara, Banyumas, Jawa Tengah, Indonesia",
                 hours: "DAILY OPEN | 08.00 - 01.00",
-                phone: "08123456789",
+                phone: "0888-2510-000",
             },
-            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15826.99373977598!2d109.2458448!3d-7.4093922!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655e8b068285c5%3A0x7d6b3a5a7b6c59d!2sPurwokerto%2C%20Banyumas%20Regency%2C%20Central%20Java!5e0!3m2!1sen!2sid!4v1672531200000!5m2!1sen!2sid",
+            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3!2d109.2374172!3d-7.4124204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f59420e3035%3A0x579acae6beb46848!2sKEDAI%20SEPIJAK%20%7C%20Purwokerto!5e0!3m2!1sen!2sid!4v1732000000000!5m2!1sen!2sid",
         };
     },
 };

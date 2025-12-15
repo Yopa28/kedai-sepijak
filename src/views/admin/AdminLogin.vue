@@ -144,6 +144,19 @@
                         </button>
                     </form>
 
+                    <div
+                        v-if="showCaptchaWidget"
+                        class="mt-6 border border-dashed border-green-300 rounded-lg p-4 bg-green-50"
+                    >
+                        <p class="text-sm text-[#1E4D3B] mb-2">
+                            Silakan selesaikan captcha untuk membuktikan bahwa Anda bukan bot.
+                        </p>
+                        <div id="recaptcha-container"></div>
+                        <p v-if="recaptchaError" class="text-xs text-red-500 mt-2">
+                            {{ recaptchaError }}
+                        </p>
+                    </div>
+
                     <!-- Info -->
                     <div
                         class="mt-6 bg-green-50 border border-green-200 rounded-lg p-4"
@@ -162,10 +175,10 @@
                             </svg>
                             <div class="text-sm text-[#1E4D3B]">
                                 <p class="font-medium mb-1">
-                                    Default Credentials:
+                                    Admin Only
                                 </p>
-                                <p><strong>Username:</strong> admin</p>
-                                <p><strong>Password:</strong> admin123</p>
+                                <!-- <p><strong>Username:</strong> admin</p>
+                                <p><strong>Password:</strong> admin123</p> -->
                             </div>
                         </div>
                     </div>
@@ -197,6 +210,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { loadRecaptcha } from "@/utils/recaptcha";
+
+const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -210,6 +226,12 @@ const rememberMe = ref(false);
 const showPassword = ref(false);
 const loading = ref(false);
 const error = ref(null);
+const showCaptchaWidget = ref(false);
+const recaptchaToken = ref("");
+const recaptchaError = ref("");
+
+let widgetId = null;
+let grecaptchaInstance = null;
 
 // Methods
 async function handleLogin() {
@@ -220,27 +242,65 @@ async function handleLogin() {
 
     loading.value = true;
     error.value = null;
+    recaptchaError.value = "";
 
     try {
         const result = await authStore.login(
             credentials.value.username,
             credentials.value.password,
+            { recaptchaToken: recaptchaToken.value || undefined },
         );
 
         if (result.success) {
-            // Login berhasil, redirect ke dashboard
             router.push("/admin/dashboard");
-        } else {
-            error.value =
-                result.message ||
-                "Login gagal. Periksa username dan password Anda.";
+            return;
         }
+
+        if (result.captchaRequired && !showCaptchaWidget.value) {
+            await showCaptcha();
+        }
+
+        error.value =
+            result.message ||
+            "Login gagal. Periksa username dan password Anda.";
     } catch (err) {
         error.value = err.message || "Terjadi kesalahan saat login";
         console.error("Login error:", err);
     } finally {
         loading.value = false;
     }
+}
+
+async function showCaptcha() {
+    if (!recaptchaSiteKey) {
+        recaptchaError.value = "Captcha tidak dikonfigurasi";
+        showCaptchaWidget.value = true;
+        return;
+    }
+
+    const grecaptcha = await loadRecaptcha();
+    showCaptchaWidget.value = true;
+
+    if (widgetId !== null && grecaptchaInstance) {
+        grecaptchaInstance.reset(widgetId);
+    }
+
+    widgetId = grecaptcha.render("recaptcha-container", {
+        sitekey: recaptchaSiteKey,
+        callback: (token) => {
+            recaptchaToken.value = token;
+            recaptchaError.value = "";
+        },
+        "error-callback": () => {
+            recaptchaError.value = "Gagal memuat captcha";
+        },
+        "expired-callback": () => {
+            recaptchaToken.value = "";
+            recaptchaError.value = "Token captcha telah kadaluwarsa";
+        },
+    });
+
+    grecaptchaInstance = grecaptcha;
 }
 
 function clearError() {

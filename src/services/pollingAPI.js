@@ -129,6 +129,20 @@ export const getPoll = async (id) => {
   }
 };
 
+// Ambil list voter untuk polling tertentu (admin)
+export const getPollVotes = async (id) => {
+  try {
+    const res = await api.get(`/polling/${id}/votes`);
+    const processed = handleApiResponse(res);
+    if (processed.success && processed.data) {
+      return processed.data; // { id, question, votes: [...] }
+    }
+    throw new Error(processed.message || 'Gagal mengambil daftar voter');
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
 // ... sisanya ...
 export const getPollStatistics = async () => {
   return get('/polling/statistics');

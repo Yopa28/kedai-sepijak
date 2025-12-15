@@ -131,6 +131,15 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: "sentiment",
+        name: "AdminSentiment",
+        component: () => import("../components/SentimentAnalytics.vue"),
+        meta: {
+          title: "Sentiment Analysis (AI) - Kedai Sepijak Admin",
+          requiresAuth: true,
+        },
+      },
     ],
   },
 
@@ -183,34 +192,27 @@ router.beforeEach(async (to, from, next) => {
   const isGuest = to.matched.some((record) => record.meta.guest);
 
   if (requiresAuth) {
-    // Check if user is authenticated
-    if (!authStore.isAuthenticated) {
-      // Try to restore session from server
-      const isValid = await authStore.checkSession();
-
-      if (!isValid) {
-        // Not authenticated, redirect to login
-        next({
-          name: "AdminLogin",
-          query: { redirect: to.fullPath },
-        });
-        return;
-      }
-    }
-    // User is authenticated, proceed
-    next();
-  } else if (isGuest) {
-    // Guest routes (login page)
-    if (authStore.isAuthenticated) {
-      // Already logged in, redirect to dashboard
-      next({ name: "AdminDashboard" });
+    const hasSession = await authStore.ensureSession();
+    if (!hasSession) {
+      next({
+        name: "AdminLogin",
+        query: { redirect: encodeURIComponent(to.fullPath) },
+      });
       return;
     }
     next();
-  } else {
-    // Public routes
-    next();
+    return;
   }
+
+  if (isGuest && authStore.isAuthenticated) {
+    const redirectTarget = from?.name && from?.name !== "AdminLogin"
+      ? { path: from.fullPath }
+      : { name: "AdminDashboard" };
+    next(redirectTarget);
+    return;
+  }
+
+  next();
 });
 
 // Global error handler

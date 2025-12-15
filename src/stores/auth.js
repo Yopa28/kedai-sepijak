@@ -1,12 +1,18 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import api from "@/services/api"; // pastiin pathnya bener
+import api from "@/services/api";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const isAuthenticated = ref(false);
   const loading = ref(false);
   const error = ref(null);
+  const initialized = ref(false);
+
+  const STORAGE_KEYS = {
+    user: "admin_user",
+    token: "admin_token",
+  };
 
   const isAdmin = computed(() =>
     ["super_admin", "admin"].includes(user.value?.role)
@@ -14,78 +20,139 @@ export const useAuthStore = defineStore("auth", () => {
   const userName = computed(() => user.value?.full_name || "Admin");
   const userRole = computed(() => user.value?.role || "");
 
-  async function login(username, password) {
-    loading.value = true; error.value = null;
+  const setSession = (profile, token) => {
+    user.value = profile;
+    isAuthenticated.value = true;
+    localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(profile));
+    if (token) {
+      localStorage.setItem(STORAGE_KEYS.token, token);
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+  };
+
+  const clearSession = () => {
+    user.value = null;
+    isAuthenticated.value = false;
+    localStorage.removeItem(STORAGE_KEYS.user);
+    localStorage.removeItem(STORAGE_KEYS.token);
+    delete api.defaults.headers.common["Authorization"];
+  };
+
+  async function login(username, password, options = {}) {
+    loading.value = true;
+    error.value = null;
     try {
-      const res = await api.post("/auth/login", { username, password }, { withCredentials: true });
+      const payload = { username, password };
+      if (options.recaptchaToken) {
+        payload.recaptchaToken = options.recaptchaToken;
+      }
+
+      const res = await api.post(
+        "/auth/login",
+        payload,
+        { withCredentials: true },
+      );
       if (!res.data?.success) throw new Error(res.data?.message || "Login gagal");
 
-      user.value = res.data.data;
-      isAuthenticated.value = true;
-
-      // 🔑 token
-      const token = res.data.token;
-      localStorage.setItem("admin_user", JSON.stringify(res.data.data));
-      localStorage.setItem("admin_token", token);
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setSession(res.data.data, res.data.token);
 
       return { success: true, data: res.data.data };
     } catch (err) {
-      error.value = err.response?.data?.message || err.message || "Terjadi kesalahan saat login";
-      isAuthenticated.value = false; user.value = null;
-      return { success: false, message: error.value };
+      const responseData = err.response?.data;
+      error.value =
+        responseData?.message || err.message || "Terjadi kesalahan saat login";
+      clearSession();
+      return {
+        success: false,
+        message: error.value,
+        captchaRequired: Boolean(responseData?.captchaRequired),
+      };
     } finally {
       loading.value = false;
     }
   }
 
   async function logout() {
-    try { await api.post("/auth/logout", {}, { withCredentials: true }); } catch {}
-    user.value = null; isAuthenticated.value = false;
-    localStorage.removeItem("admin_user");
-    localStorage.removeItem("admin_token");
-    delete api.defaults.headers.common["Authorization"];
+    try {
+      await api.post("/auth/logout", {}, { withCredentials: true });
+    } catch (err) {
+      console.warn("Logout error", err?.message);
+    } finally {
+      clearSession();
+    }
   }
 
-  async function checkSession() {
+  async function checkSession({ force = false } = {}) {
+    if (!force && isAuthenticated.value) return true;
+
     loading.value = true;
     try {
       const res = await api.get("/auth/session", { withCredentials: true });
       if (res.data?.success && res.data?.logged_in) {
-        user.value = res.data.data; isAuthenticated.value = true;
-        localStorage.setItem("admin_user", JSON.stringify(res.data.data));
-        // kalau backend juga set cookie, header masih tetap dari localStorage
+        setSession(res.data.data);
         return true;
       }
-      user.value = null; isAuthenticated.value = false;
-      localStorage.removeItem("admin_user"); localStorage.removeItem("admin_token");
-      delete api.defaults.headers.common["Authorization"];
+      clearSession();
       return false;
     } catch {
-      user.value = null; isAuthenticated.value = false;
-      localStorage.removeItem("admin_user"); localStorage.removeItem("admin_token");
-      delete api.defaults.headers.common["Authorization"];
+      clearSession();
       return false;
-    } finally { loading.value = false; }
-  }
-
-  function initFromStorage() {
-    const storedUser = localStorage.getItem("admin_user");
-    const storedToken = localStorage.getItem("admin_token");
-    if (storedUser && storedToken) {
-      try {
-        user.value = JSON.parse(storedUser);
-        isAuthenticated.value = true;
-        api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
-      } catch {
-        localStorage.removeItem("admin_user");
-        localStorage.removeItem("admin_token");
-      }
+    } finally {
+      loading.value = false;
+      initialized.value = true;
     }
   }
 
-  function clearError() { error.value = null; }
+  function initFromStorage() {
+    if (initialized.value) return;
+    const storedUser = localStorage.getItem(STORAGE_KEYS.user);
+    const storedToken = localStorage.getItem(STORAGE_KEYS.token);
+    if (storedUser && storedToken) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setSession(parsed, storedToken);
+      } catch {
+        clearSession();
+      }
+    }
+    initialized.value = true;
+  }
+
+  let sessionPromise = null;
+  async function ensureSession() {
+    if (isAuthenticated.value) return true;
+    if (!initialized.value) initFromStorage();
+
+    if (isAuthenticated.value) return true;
+
+    if (!sessionPromise) {
+      sessionPromise = checkSession({ force: true }).finally(() => {
+        sessionPromise = null;
+      });
+    }
+    return sessionPromise;
+  }
+
+  function clearError() {
+    error.value = null;
+  }
+
   initFromStorage();
 
-  return { user, isAuthenticated, loading, error, isAdmin, userName, userRole, login, logout, checkSession, initFromStorage, clearError };
+  return {
+    user,
+    isAuthenticated,
+    loading,
+    error,
+    isAdmin,
+    userName,
+    userRole,
+    initialized,
+    login,
+    logout,
+    checkSession,
+    ensureSession,
+    initFromStorage,
+    clearError,
+  };
 });

@@ -6,18 +6,28 @@
 import axios from "axios";
 
 // Base URL from environment or default
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5001/api";
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+const ADMIN_TOKEN_KEY = "admin_token";
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
+
+const setAuthHeader = (token) => {
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common["Authorization"];
+  }
+};
 
 // Request interceptor
 api.interceptors.request.use(
@@ -33,10 +43,12 @@ api.interceptors.request.use(
       );
     }
 
-    // Add auth token if available (for future use)
-    const token = localStorage.getItem("auth_token");
+    // Add auth token if available
+    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete config.headers.Authorization;
     }
 
     return config;
@@ -76,12 +88,11 @@ api.interceptors.response.use(
       // Handle specific status codes
       switch (error.response.status) {
         case 401:
-          // Unauthorized - redirect to login (if implemented)
-          console.warn("Unauthorized access");
-          break;
         case 403:
-          // Forbidden
-          console.warn("Access forbidden");
+          // Unauthorized / Forbidden: clear local token so guard can handle re-login
+          localStorage.removeItem(ADMIN_TOKEN_KEY);
+          delete api.defaults.headers.common["Authorization"];
+          console.warn("Authorization error", error.response.status);
           break;
         case 404:
           // Not found
@@ -105,6 +116,9 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// Initialize default header from storage on first load
+setAuthHeader(localStorage.getItem(ADMIN_TOKEN_KEY));
 
 // Helper function to handle API responses
 export const handleApiResponse = (response) => {

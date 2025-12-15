@@ -145,30 +145,36 @@
                 <h3 class="text-lg font-semibold text-gray-900">
                   {{ feedback.employee_name }}
                 </h3>
+                <div class="text-sm text-gray-500 flex items-center gap-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7-5 7 5v8a2 2 0 01-2 2h-4v-6H9v6H5a2 2 0 01-2-2V8z" />
+                  </svg>
+                  <span>{{ feedback.contact || '-' }}</span>
+                </div>
                 <!-- Tampilkan semua rating kriteria -->
                 <div class="flex flex-col text-sm">
-                  <div class="flex items-center gap-1">
+                  <div v-if="feedback.rating_sikap_pelayan !== null" class="flex items-center gap-1">
                     <span class="text-gray-600">Sikap:</span>
                     <span v-for="star in 5" :key="star" class="text-xl">
                       <span v-if="star <= feedback.rating_sikap_pelayan" class="text-amber-400">★</span>
                       <span v-else class="text-gray-300">★</span>
                     </span>
                   </div>
-                  <div class="flex items-center gap-1">
+                  <div v-if="feedback.rating_waktu_pesanan !== null" class="flex items-center gap-1">
                     <span class="text-gray-600">Waktu:</span>
                     <span v-for="star in 5" :key="star" class="text-xl">
                       <span v-if="star <= feedback.rating_waktu_pesanan" class="text-amber-400">★</span>
                       <span v-else class="text-gray-300">★</span>
                     </span>
                   </div>
-                  <div class="flex items-center gap-1">
+                  <div v-if="feedback.rating_rasa_menu !== null" class="flex items-center gap-1">
                     <span class="text-gray-600">Rasa:</span>
                     <span v-for="star in 5" :key="star" class="text-xl">
                       <span v-if="star <= feedback.rating_rasa_menu" class="text-amber-400">★</span>
                       <span v-else class="text-gray-300">★</span>
                     </span>
                   </div>
-                  <div class="flex items-center gap-1">
+                  <div v-if="feedback.rating_kebersihan !== null" class="flex items-center gap-1">
                     <span class="text-gray-600">Kebersihan:</span>
                     <span v-for="star in 5" :key="star" class="text-xl">
                       <span v-if="star <= feedback.rating_kebersihan" class="text-amber-400">★</span>
@@ -187,6 +193,14 @@
                   </svg>
                   Role: {{ feedback.role }}
                 </div>
+
+                <div v-if="feedback.contact" class="flex items-center gap-1 text-gray-500 text-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span>{{ feedback.contact }}</span>
+                </div>
+
                 <div class="flex items-center">
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -196,17 +210,25 @@
               </div>
             </div>
 
-            <div class="ml-4">
+            <div class="ml-4 flex flex-col gap-2">
               <span
                 class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
                 :class="{
-                  'bg-green-100 text-green-800': feedback.status === 'approved',
+                  'bg-green-100 text-green-800': feedback.status === 'selesai',
+                  'bg-blue-100 text-blue-800': feedback.status === 'approved',
                   'bg-yellow-100 text-yellow-800': feedback.status === 'pending',
                   'bg-red-100 text-red-800': feedback.status === 'rejected',
                 }"
               >
-                {{ feedback.status === 'approved' ? 'Approved' : feedback.status === 'rejected' ? 'Rejected' : 'Pending' }}
+                {{ feedback.status === 'selesai' ? 'Selesai' : feedback.status === 'approved' ? 'Approved' : feedback.status === 'rejected' ? 'Rejected' : 'Pending' }}
               </span>
+              <button
+                v-if="feedback.status === 'pending'"
+                @click.stop="changeStatus(feedback.id, 'selesai')"
+                class="px-3 py-1 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Tandai Selesai
+              </button>
             </div>
           </div>
         </div>
@@ -279,28 +301,28 @@
           <div>
             <label class="text-sm font-medium text-gray-500">Rating</label>
             <div class="mt-2 space-y-2">
-              <div class="flex items-center gap-2">
+              <div v-if="selectedFeedback.rating_sikap_pelayan !== null" class="flex items-center gap-2">
                 <span class="text-gray-600 w-32">Sikap Pelayan:</span>
                 <span v-for="star in 5" :key="star" class="text-xl">
                   <span v-if="star <= selectedFeedback.rating_sikap_pelayan" class="text-amber-400">★</span>
                   <span v-else class="text-gray-300">★</span>
                 </span>
               </div>
-              <div class="flex items-center gap-2">
+              <div v-if="selectedFeedback.rating_waktu_pesanan !== null" class="flex items-center gap-2">
                 <span class="text-gray-600 w-32">Waktu Pesanan:</span>
                 <span v-for="star in 5" :key="star" class="text-xl">
                   <span v-if="star <= selectedFeedback.rating_waktu_pesanan" class="text-amber-400">★</span>
                   <span v-else class="text-gray-300">★</span>
                 </span>
               </div>
-              <div class="flex items-center gap-2">
+              <div v-if="selectedFeedback.rating_rasa_menu !== null" class="flex items-center gap-2">
                 <span class="text-gray-600 w-32">Rasa Menu:</span>
                 <span v-for="star in 5" :key="star" class="text-xl">
                   <span v-if="star <= selectedFeedback.rating_rasa_menu" class="text-amber-400">★</span>
                   <span v-else class="text-gray-300">★</span>
                 </span>
               </div>
-              <div class="flex items-center gap-2">
+              <div v-if="selectedFeedback.rating_kebersihan !== null" class="flex items-center gap-2">
                 <span class="text-gray-600 w-32">Kebersihan:</span>
                 <span v-for="star in 5" :key="star" class="text-xl">
                   <span v-if="star <= selectedFeedback.rating_kebersihan" class="text-amber-400">★</span>
@@ -324,6 +346,37 @@
             <label class="text-sm font-medium text-gray-500">Lokasi</label>
             <p class="text-gray-900">{{ selectedFeedback.latitude }}, {{ selectedFeedback.longitude }}</p>
           </div>
+
+          <div>
+            <label class="text-sm font-medium text-gray-500">Status</label>
+            <div class="flex items-center gap-3 mt-2">
+              <span
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                :class="{
+                  'bg-green-100 text-green-800': selectedFeedback.status === 'selesai',
+                  'bg-blue-100 text-blue-800': selectedFeedback.status === 'approved',
+                  'bg-yellow-100 text-yellow-800': selectedFeedback.status === 'pending',
+                  'bg-red-100 text-red-800': selectedFeedback.status === 'rejected',
+                }"
+              >
+                {{ selectedFeedback.status === 'selesai' ? 'Selesai' : selectedFeedback.status === 'approved' ? 'Approved' : selectedFeedback.status === 'rejected' ? 'Rejected' : 'Pending' }}
+              </span>
+              <button
+                v-if="selectedFeedback.status === 'pending'"
+                @click="changeStatus(selectedFeedback.id, 'selesai')"
+                class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Tandai Selesai
+              </button>
+              <button
+                v-if="selectedFeedback.status === 'selesai'"
+                @click="changeStatus(selectedFeedback.id, 'pending')"
+                class="px-4 py-2 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                Kembalikan ke Pending
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -332,9 +385,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { getFeedback } from '@/services/feedbackAPI'
+import { getFeedback, updateFeedbackStatus } from '@/services/feedbackAPI'
 import { jsPDF } from 'jspdf'
-import 'jspdf-autotable'
+import autoTable from 'jspdf-autotable'
 
 // State
 const feedback = ref([])
@@ -374,24 +427,42 @@ const averageRatingByType = (type) => {
   return sum / filtered.length
 }
 
+// Helper: normalize and calculate stats from feedback array
+function calculateFeedbackStats(items) {
+  let positive = 0
+  let negative = 0
+
+  items.forEach(f => {
+    // Prefer explicit overall `rating` if available
+    let avg = null
+    if (f.rating !== undefined && f.rating !== null) {
+      avg = Number(f.rating)
+    } else if (f.rating_rasa_menu !== undefined && f.rating_rasa_menu !== null) {
+      avg = Number(f.rating_rasa_menu)
+    } else if ((f.rating_sikap_pelayan !== undefined && f.rating_sikap_pelayan !== null) || (f.rating_waktu_pesanan !== undefined && f.rating_waktu_pesanan !== null)) {
+      const parts = []
+      if (f.rating_sikap_pelayan !== undefined && f.rating_sikap_pelayan !== null) parts.push(Number(f.rating_sikap_pelayan))
+      if (f.rating_waktu_pesanan !== undefined && f.rating_waktu_pesanan !== null) parts.push(Number(f.rating_waktu_pesanan))
+      if (parts.length > 0) avg = parts.reduce((a, b) => a + b, 0) / parts.length
+    } else if (f.rating_kebersihan !== undefined && f.rating_kebersihan !== null) {
+      avg = Number(f.rating_kebersihan)
+    }
+
+    if (avg === null || Number.isNaN(avg)) return
+
+    if (avg >= 4) positive++
+    else if (avg <= 2) negative++
+  })
+
+  return { positiveCount: positive, negativeCount: negative }
+}
+
 const positiveCount = computed(() => {
-  // Hitung feedback yang semua rating >= 4
-  return filteredFeedback.value.filter(f => {
-    return f.rating_sikap_pelayan >= 4 &&
-           f.rating_waktu_pesanan >= 4 &&
-           f.rating_rasa_menu >= 4 &&
-           f.rating_kebersihan >= 4;
-  }).length
+  return calculateFeedbackStats(filteredFeedback.value).positiveCount
 })
 
 const negativeCount = computed(() => {
-  // Hitung feedback yang ada rating <= 2
-  return filteredFeedback.value.filter(f => {
-    return f.rating_sikap_pelayan <= 2 ||
-           f.rating_waktu_pesanan <= 2 ||
-           f.rating_rasa_menu <= 2 ||
-           f.rating_kebersihan <= 2;
-  }).length
+  return calculateFeedbackStats(filteredFeedback.value).negativeCount
 })
 
 const totalPages = computed(() => Math.ceil(filteredFeedback.value.length / perPage.value))
@@ -423,6 +494,9 @@ function closeDetailModal() {
 
 function exportFeedback() {
   const doc = new jsPDF('landscape', 'mm', 'a4')
+  
+  // Register autoTable with jsPDF
+  autoTable(doc)
 
     // === HEADER ===
   doc.setFillColor(28, 126, 75) // Dark green
@@ -620,11 +694,13 @@ async function loadFeedback() {
     feedback.value = rows.map(r => ({
       id: r.id,
       employee_name: r.employee_name,
+      contact: r.contact,
       role: r.role,
       rating_sikap_pelayan: r.rating_sikap_pelayan,
       rating_waktu_pesanan: r.rating_waktu_pesanan,
       rating_rasa_menu: r.rating_rasa_menu,
       rating_kebersihan: r.rating_kebersihan,
+      rating: r.rating,
       message: r.message,
       status: r.status || 'pending',
       latitude: r.latitude,
@@ -636,6 +712,34 @@ async function loadFeedback() {
     feedback.value = []
   } finally {
     loading.value = false
+  }
+}
+
+// Update status feedback
+async function changeStatus(feedbackId, newStatus) {
+  try {
+    const result = await updateFeedbackStatus(feedbackId, newStatus)
+    
+    if (result.success) {
+      // Update local data
+      const index = feedback.value.findIndex(f => f.id === feedbackId)
+      if (index !== -1) {
+        feedback.value[index].status = newStatus
+      }
+      
+      // Update selected feedback jika modal terbuka
+      if (selectedFeedback.value && selectedFeedback.value.id === feedbackId) {
+        selectedFeedback.value.status = newStatus
+      }
+      
+      // Tampilkan notifikasi sukses (opsional)
+      alert(`Status berhasil diubah menjadi ${newStatus === 'selesai' ? 'Selesai' : 'Pending'}`)
+    } else {
+      alert('Gagal mengubah status: ' + (result.message || 'Unknown error'))
+    }
+  } catch (error) {
+    console.error('Error changing status:', error)
+    alert('Terjadi kesalahan saat mengubah status')
   }
 }
 

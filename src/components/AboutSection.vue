@@ -35,11 +35,11 @@
                         data-aos="zoom-in"
                         data-aos-delay="400"
                     />
-                    <div
+                    <!-- <div
                         class="absolute bottom-0 right-0 h-48 w-48 bg-primary-green rounded-xl shadow-lg border-8 border-background-beige"
                         data-aos="fade-up"
                         data-aos-delay="500"
-                    ></div>
+                    ></div> -->
                 </div>
             </div>
         </div>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role-Based Rating System - Kedai Sepijak</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f1e8 0%, #f0ebe3 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ============ VIEW A: ROLE SELECTION ============ */
+
+        .role-selection {
+            display: block;
+        }
+
+        .role-selection.hidden {
+            display: none;
+        }
+
+        .selection-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .selection-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+        }
+
+        .selection-subtitle {
+            font-size: 1.1rem;
+            color: #6b8e4f;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(45, 80, 22, 0.15);
+            border-color: #d4a574;
+        }
+
+        .role-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .role-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-description {
+            font-size: 0.95rem;
+            color: #8b9b7f;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-cta {
+            display: inline-block;
+            color: #d4a574;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover .role-cta {
+            transform: translateX(4px);
+        }
+
+        /* ============ VIEW B: RATING INTERFACE ============ */
+
+        .rating-interface {
+            display: none;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .rating-interface.active {
+            display: block;
+        }
+
+        .back-button {
+            background: white;
+            border: 2px solid #2d5016;
+            color: #2d5016;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .back-button:hover {
+            background: #2d5016;
+            color: white;
+            transform: translateX(-4px);
+        }
+
+        .rating-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d5016;
+        }
+
+        .rating-question {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, #6b8e4f 0%, #5a7a43 100%);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 142, 79, 0.2);
+        }
+
+        .rating-question p {
+            font-size: 1.3rem;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .star-rating {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            background: white;
+            border: 3px solid #d4a574;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #d4a574;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .star:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+        }
+
+        .star.active {
+            background: #d4a574;
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+        }
+
+        .rating-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d5016;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tags-area {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .tags-area.hidden {
+            display: none;
+        }
+
+        .tags-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d5016;
+            margin-bottom: 1rem;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .tag {
+            background: #f5f1e8;
+            border: 2px solid #d4a574;
+            padding: 0.75rem 1.25rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #2d5016;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .tag:hover {
+            background: #ede8dd;
+            transform: translateY(-2px);
+        }
+
+        .tag.selected {
+            background: #d4a574;
+            color: white;
+            border-color: #d4a574;
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+        }
+
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, #2d5016 0%, #1f3610 100%);
+            color: white;
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3);
+        }
+
+        .submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45, 80, 22, 0.4);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hint {
+            text-align: center;
+            color: #d4a574;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* ============ ANIMATIONS ============ */
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ============ RESPONSIVE DESIGN ============ */
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+
+            .selection-title {
+                font-size: 1.5rem;
+            }
+
+            .roles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .role-card {
+                padding: 1.5rem;
+            }
+
+            .rating-header {
+                padding: 1.5rem;
+            }
+
+            .header-title {
+                font-size: 1.4rem;
+            }
+
+            .rating-question {
+                padding: 1.5rem;
+            }
+
+            .rating-question p {
+                font-size: 1.1rem;
+            }
+
+            .star {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .tags-container {
+                gap: 0.5rem;
+            }
+
+            .tag {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .selection-title {
+                font-size: 1.3rem;
+            }
+
+            .roles-grid {
+                gap: 0.75rem;
+            }
+
+            .role-card {
+                padding: 1.2rem 1rem;
+            }
+
+            .role-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .role-title {
+                font-size: 1.1rem;
+            }
+
+            .role-description {
+                font-size: 0.85rem;
+            }
+
+            .star {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .rating-text {
+                font-size: 1.1rem;
+            }
+
+            .tags-label {
+                font-size: 1rem;
+            }
+
+            .tag {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- View A: Role Selection -->
+        <div id="roleSelection" class="role-selection">
+            <div class="selection-header">
+                <h2 class="selection-title">Pilih Kategori Rating</h2>
+                <p class="selection-subtitle">Mana yang ingin Anda nilai?</p>
+            </div>
+
+            <div class="roles-grid" id="rolesGrid"></div>
+        </div>
+
+        <!-- View B: Rating Interface -->
+        <div id="ratingInterface" class="rating-interface">
+            <button class="back-button" onclick="app.goBack()">← Kembali</button>
+
+            <div class="rating-header">
+                <div class="header-icon" id="headerIcon"></div>
+                <h2 class="header-title" id="headerTitle"></h2>
+            </div>
+
+            <div class="rating-question">
+                <p id="questionText"></p>
+            </div>
+
+            <div class="star-rating">
+                <div class="stars-container" id="starsContainer"></div>
+                <div class="rating-text" id="ratingText"></div>
+            </div>
+
+            <div class="tags-area hidden" id="tagsArea">
+                <p class="tags-label" id="tagsLabel"></p>
+                <div class="tags-container" id="tagsContainer"></div>
+            </div>
+
+            <button class="submit-button hidden" id="submitButton" onclick="app.submitRating()">
+                Kirim Rating
+            </button>
+            <p class="hint hidden" id="hint">Pilih minimal 1 tag untuk melanjutkan</p>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            roleConfig: {
+                barista: {
+                    title: "Nilai Barista & Produk",
+                    icon: "☕",
+                    question: "Gimana rasa kopi dan minumanmu?",
+                    positiveTags: ["Rasa Enak", "Suhu Pas", "Latte Art Bagus", "Penyajian Cepat"],
+                    negativeTags: ["Hambar/Pahit", "Terlalu Manis", "Dingin", "Penyajian Lama", "Salah Menu"]
+                },
+                waiters: {
+                    title: "Nilai Pelayanan Waiters",
+                    icon: "💁‍♂️",
+                    question: "Seberapa membantu kakak pramusajinya?",
+                    positiveTags: ["Ramah Banget", "Gercep/Cepat", "Paham Menu", "Helpful"],
+                    negativeTags: ["Judes/Ketis", "Lambat", "Salah Antar", "Susah Dipanggil"]
+                },
+                kasir: {
+                    title: "Nilai Transaksi Kasir",
+                    icon: "💸",
+                    question: "Gimana pengalaman bayar di kasir?",
+                    positiveTags: ["Proses Cepat", "Senyum/Sapa", "Penjelasan Jelas", "Struk Lengkap"],
+                    negativeTags: ["Antrian Lama", "Tidak Ramah", "Kembalian Salah", "Ribet"]
+                },
+                cleaning: {
+                    title: "Nilai Kebersihan",
+                    icon: "🧹",
+                    question: "Apakah tempat kami nyaman dan bersih?",
+                    positiveTags: ["Meja Kinclong", "Toilet Wangi", "Lantai Bersih", "AC Dingin"],
+                    negativeTags: ["Meja Lengket", "Toilet Kotor/Bau", "Lantai Licin", "Ada Sampah"]
+                }
+            },
+            selectedRole: null,
+            selectedRating: 0,
+            selectedTags: [],
+
+            init() {
+                this.renderRoles();
+                this.renderStars();
+            },
+
+            renderRoles() {
+                const grid = document.getElementById('rolesGrid');
+                grid.innerHTML = '';
+
+                Object.entries(this.roleConfig).forEach(([key, config]) => {
+                    const card = document.createElement('div');
+                    card.className = 'role-card';
+                    card.innerHTML = `
+                        <div class="role-icon">${config.icon}</div>
+                        <h3 class="role-title">${config.title}</h3>
+                        <p class="role-description">Berikan rating Anda</p>
+                        <div class="role-cta">Lanjut →</div>
+                    `;
+                    card.onclick = () => this.selectRole(key);
+                    grid.appendChild(card);
+                });
+            },
+
+            renderStars() {
+                const container = document.getElementById('starsContainer');
+                container.innerHTML = '';
+
+                for (let i = 1; i <= 5; i++) {
+                    const star = document.createElement('button');
+                    star.className = 'star';
+                    star.textContent = '★';
+                    star.onclick = () => this.selectRating(i);
+                    container.appendChild(star);
+                }
+            },
+
+            selectRole(roleKey) {
+                this.selectedRole = roleKey;
+                const config = this.roleConfig[roleKey];
+
+                document.getElementById('roleSelection').classList.add('hidden');
+                document.getElementById('ratingInterface').classList.add('active');
+
+                document.getElementById('headerIcon').textContent = config.icon;
+                document.getElementById('headerTitle').textContent = config.title;
+                document.getElementById('questionText').textContent = config.question;
+
+                this.resetRating();
+            },
+
+            selectRating(stars) {
+                this.selectedRating = stars;
+                this.selectedTags = [];
+
+                const stars_els = document.querySelectorAll('.star');
+                stars_els.forEach((el, idx) => {
+                    if (idx + 1 <= stars) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
+
+                const ratingTexts = {
+                    1: "Sangat Buruk",
+                    2: "Buruk",
+                    3: "Cukup",
+                    4: "Bagus",
+                    5: "Sangat Bagus!"
+                };
+
+                document.getElementById('ratingText').textContent = ratingTexts[stars];
+                this.renderTags();
+                this.updateUI();
+            },
+
+            renderTags() {
+                const config = this.roleConfig[this.selectedRole];
+                const tags = this.selectedRating >= 4 ? config.positiveTags : config.negativeTags;
+
+                const tagsLabel = document.getElementById('tagsLabel');
+                tagsLabel.textContent = this.selectedRating >= 4 ? "Apa yang bagus?" : "Apa yang perlu diperbaiki?";
+
+                const container = document.getElementById('tagsContainer');
+                container.innerHTML = '';
+
+                tags.forEach(tag => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tag';
+                    btn.textContent = tag;
+                    btn.onclick = () => this.toggleTag(tag, btn);
+                    container.appendChild(btn);
+                });
+            },
+
+            toggleTag(tag, element) {
+                const idx = this.selectedTags.indexOf(tag);
+                if (idx > -1) {
+                    this.selectedTags.splice(idx, 1);
+                    element.classList.remove('selected');
+                } else {
+                    this.selectedTags.push(tag);
+                    element.classList.add('selected');
+                }
+
+                this.updateUI();
+            },
+
+            updateUI() {
+                const tagsArea = document.getElementById('tagsArea');
+                const submitBtn = document.getElementById('submitButton');
+                const hint = document.getElementById('hint');
+
+                if (this.selectedRating > 0) {
+                    tagsArea.classList.remove('hidden');
+                    submitBtn.classList.remove('hidden');
+
+                    if (this.selectedTags.length === 0) {
+                        submitBtn.disabled = true;
+                        hint.classList.remove('hidden');
+                    } else {
+                        submitBtn.disabled = false;
+                        hint.classList.add('hidden');
+                    }
+                } else {
+                    tagsArea.classList.add('hidden');
+                    submitBtn.classList.add('hidden');
+                    hint.classList.add('hidden');
+                }
+            },
+
+            submitRating() {
+                const resultData = {
+                    role: this.selectedRole,
+                    roleTitle: this.roleConfig[this.selectedRole].title,
+                    starRating: this.selectedRating,
+                    selectedTags: this.selectedTags,
+                    ratingType: this.selectedRating >= 4 ? "positive" : "negative",
+                    timestamp: new Date().toISOString()
+                };
+
+                console.log('📊 Rating Submitted:', resultData);
+                alert(`✅ Terima kasih! Rating Anda untuk ${resultData.roleTitle} telah kami terima.`);
+
+                this.goBack();
+            },
+
+            goBack() {
+                document.getElementById('roleSelection').classList.remove('hidden');
+                document.getElementById('ratingInterface').classList.remove('active');
+                this.resetRating();
+            },
+
+            resetRating() {
+                this.selectedRating = 0;
+                this.selectedTags = [];
+                document.getElementById('ratingText').textContent = '';
+                document.querySelectorAll('.star').forEach(el => el.classList.remove('active'));
+                this.updateUI();
+            }
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-6 rounded-xl bg-white p-8 shadow-2xl" id="polling">
     <div class="text-center">
       <h3 class="font-display text-3xl font-bold text-primary-green">
-        Help Us Choose the Next Event!
+        Bantu Kami Memilih Acara Berikutnya!
       </h3>
       <p class="text-text-charcoal/70 mt-1">
         Your vote determines who performs at the next Kedai Sepijak event.

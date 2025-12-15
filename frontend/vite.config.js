@@ -4,10 +4,13 @@ import path from "path";
 
 export default defineConfig({
   plugins: [vue()],
-  base: "/kedai-sepijak/",
+
+  // 🟢 PERBAIKAN PENTING DI SINI: Ubah ke root (/)
+  base: "/",
+
   server: {
     proxy: {
-      // Proxy API requests during development to backend server
+      // Proxy ini hanya berjalan saat development lokal, jadi aman.
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,

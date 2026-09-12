@@ -1,62 +1,121 @@
 <template>
-    <section class="bg-primary-green py-20 sm:py-28" id="menu">
-        <div class="container mx-auto flex flex-col items-center gap-10 px-6">
-            <div class="text-center" data-aos="fade-up">
-                <h2
-                    class="font-display text-4xl font-bold leading-tight tracking-tight text-background-beige md:text-5xl"
-                    data-aos="fade-up"
+    <section
+        id="menu"
+        class="relative overflow-hidden bg-primary-green py-20 sm:py-24 lg:py-28"
+    >
+        <!-- Subtle texture, ties back to hero -->
+        <div
+            class="pointer-events-none absolute inset-0 opacity-[0.035]"
+            style="background-image: radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0); background-size: 22px 22px;"
+        ></div>
+
+        <!-- Soft glow, same language as hero -->
+        <div
+            class="pointer-events-none absolute -top-40 right-0 h-[420px] w-[420px] rounded-full bg-accent-amber/[0.06] blur-[120px]"
+        ></div>
+
+        <div
+            class="container relative z-10 mx-auto flex flex-col items-center px-6 lg:px-10"
+        >
+            <!-- ========================================
+                 HEADER — asymmetric, editorial eyebrow instead
+                 of a plain centered title
+            ========================================= -->
+            <div
+                class="flex w-full max-w-3xl flex-col items-center text-center"
+                data-aos="fade-up"
+            >
+                <div
+                    class="mb-5 flex items-center gap-3"
+                    data-aos="fade-down"
                     data-aos-delay="100"
+                >
+                    <span class="h-px w-8 bg-accent-amber/70"></span>
+                    <span
+                        class="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent-amber/90"
+                    >
+                        Pilihan Kami
+                    </span>
+                    <span class="h-px w-8 bg-accent-amber/70"></span>
+                </div>
+
+                <h2
+                    class="font-display text-4xl font-bold leading-[1.05] tracking-tight text-background-beige sm:text-5xl lg:text-[3.75rem]"
+                    data-aos="fade-up"
+                    data-aos-delay="200"
                 >
                     {{ menuTitle }}
                 </h2>
+
                 <p
-                    class="mt-2 text-base font-normal leading-normal text-secondary-sage"
+                    class="mt-5 max-w-xl font-body text-base leading-relaxed text-background-beige/60 sm:text-lg"
                     data-aos="fade-up"
-                    data-aos-delay="200"
+                    data-aos-delay="300"
                 >
                     {{ menuSubtitle }}
                 </p>
             </div>
 
+            <!-- ========================================
+                 CATEGORY FILTER — underline tabs, not
+                 filled pill buttons
+            ========================================= -->
             <div
-                class="flex flex-wrap justify-center gap-3"
+                class="mt-11 flex w-full max-w-2xl flex-wrap items-center justify-center gap-x-9 gap-y-3 border-b border-background-beige/10 pb-0"
                 data-aos="fade-up"
-                data-aos-delay="300"
+                data-aos-delay="350"
             >
                 <button
                     v-for="category in categories"
                     :key="category"
                     @click="selectedCategory = category"
                     :class="[
-                        'rounded-full px-5 py-2 text-sm font-semibold transition-all',
+                        'relative pb-4 font-body text-sm font-semibold uppercase tracking-wider transition-colors duration-300',
                         selectedCategory === category
-                            ? 'bg-background-beige text-primary-green scale-105'
-                            : 'bg-primary-green/50 text-secondary-sage hover:bg-secondary-sage hover:text-primary-green',
+                            ? 'text-background-beige'
+                            : 'text-background-beige/40 hover:text-background-beige/75',
                     ]"
                 >
                     {{ category }}
+
+                    <span
+                        class="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-accent-amber transition-transform duration-300 ease-out"
+                        :class="selectedCategory === category ? 'scale-x-100' : 'scale-x-0'"
+                    ></span>
                 </button>
             </div>
 
+            <!-- ========================================
+                 MENU GRID
+            ========================================= -->
             <div
-                class="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 pt-8"
+                class="mt-12 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7"
             >
                 <MenuCard
                     v-for="(item, index) in filteredMenuItems"
                     :key="item.id"
                     :item="item"
-                    data-aos="zoom-in"
-                    :data-aos-delay="100 + index * 100"
+                    data-aos="fade-up"
+                    :data-aos-delay="100 + index * 80"
                 />
             </div>
 
+            <!-- ========================================
+                 SEE ALL MENU
+            ========================================= -->
             <router-link
                 to="/menu"
-                class="mt-8 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-transparent border-2 border-secondary-sage text-secondary-sage text-base font-bold leading-normal tracking-wide transition-all hover:bg-secondary-sage hover:text-primary-green hover:scale-105"
+                class="group mt-14 inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-accent-amber/50 px-8 font-body text-sm font-bold uppercase tracking-wide text-accent-amber transition-all duration-500 hover:border-accent-amber hover:bg-accent-amber hover:text-primary-green hover:-translate-y-0.5"
                 data-aos="fade-up"
                 data-aos-delay="400"
             >
-                <span class="truncate">See All Menu</span>
+                <span>Lihat Semua Menu</span>
+
+                <span
+                    class="material-symbols-outlined text-lg transition-transform duration-500 group-hover:translate-x-1"
+                >
+                    arrow_forward
+                </span>
             </router-link>
         </div>
     </section>
@@ -65,75 +124,100 @@
 <script>
 import MenuCard from "./MenuCard.vue";
 
+import ayamBakar from "@/assets/images/ayambakar.jpg";
+import ayamBali from "@/assets/images/ayam-bali.jpg";
+import nasiCampur from "@/assets/images/nasi-campur.jpg";
+import manualBrew from "@/assets/images/manual-brew.jpg";
+import premiumCoffe from "@/assets/images/premium-coffe.jpg";
+import nonCoffe from "@/assets/images/noncoffe.jpg";
+
 export default {
     name: "MenuSection",
+
     components: {
         MenuCard,
     },
+
     data() {
         return {
             menuTitle: "Menu Kami",
+
             menuSubtitle:
-                "Nikmati berbagai pilihan kopi dan makanan lezat kami yang dibuat dengan bahan-bahan segar dan berkualitas tinggi.",
+                "Pilihan kopi, makanan, dan minuman untuk menemani setiap cerita di Kedai Sepijak.",
+
             selectedCategory: "All",
-            categories: ["All", "Kopi", "Non-Kopi", "Pastry"],
+
+            categories: [
+                "All",
+                "Makanan",
+                "Kopi",
+                "Non-Kopi",
+            ],
+
             menuItems: [
                 {
                     id: 1,
-                    name: "Signature Coffee Blend",
+                    name: "Ayam Bakar",
                     price: 25000,
-                    category: "Kopi",
-                    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCb0pKL93fn1dRzQuA18mCwvhNwDRpuTVgO0J568iR3v00otd1sI4pIC8iI7lPu5jLMZF_ITo3yNPQZwJQex7ox7AYPQf1WenmIYq7zUGhyxIAZLmiMWyktZy2BPmIv14rqHpiVI6bYAHo39fC-_HcZuI2gfjffESbocNwVLhmnbXXMB68RsrD1B7IoyaJmzjsp50RYVf3WutexLxEW4h3-SVWDDR2uGaUr0qizEmGYsnBZL99xNywdRd8xtsg0QsrusMnfgCODfW_5",
-                    alt: "A cup of signature blend coffee with latte art",
+                    category: "Makanan",
+                    image: ayamBakar,
+                    alt: "Ayam Bakar Kedai Sepijak",
                 },
+
                 {
                     id: 2,
-                    name: "Matcha Latte",
+                    name: "Ayam Bali",
                     price: 28000,
-                    category: "Non-Kopi",
-                    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDIoRHoSZGMwHyHFrta-266yXsYWH383q_FsTZosSRkjNBhPbOG-xaHdc-WNlVXIvjF1ZgliX_Xt51R1YnlJN2NqzmLS56a0w-snhfjQy2-FCPBsuKrobPS4eW8oYt42-HYyZ4Pp1UG2Sa8ni0kDGL-C2LVmE9bq3pZG1grnT-dtyGoXVP8a8E5gCTgmM7GYKVhoCcJineSPdPNk_jiwhvxeE3kJ3hYwS7rKdacSVjA1osy19co-uOoF-9NkAY3Dopa9RwxlpCUsF0s",
-                    alt: "A vibrant green matcha latte in a ceramic cup",
+                    category: "Makanan",
+                    image: ayamBali,
+                    alt: "Ayam Bali Kedai Sepijak",
                 },
+
                 {
                     id: 3,
-                    name: "Almond Croissant",
-                    price: 22000,
-                    category: "Pastry",
-                    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBr_8eKnwnxvbvgUhhF1Adqx5cN8ze_idImPzEFrspz_j-Hgzj6bb9ENIxGqubslzJxOQcGdPJmfT4jud2muck_9J8vlXMrQ4aa3PJDEB-HqBh5zI5S8SKI-O5uOMJ1h3pvUSu9Vq9C8goMuyZa8iEMWKjnjdtYKLwns4ZZtykUTZyhIc0pGIWQjMCX1SA06Ml-uh8oHzapGifPUqr3c0mHQBKoVYWir23cdUWp2UAPEZSKkdbyoecY_0fclxiAJJTRa84OZITee0hR",
-                    alt: "A flaky golden almond croissant on a plate",
+                    name: "Nasi Campur Bali",
+                    price: 30000,
+                    category: "Makanan",
+                    image: nasiCampur,
+                    alt: "Nasi Campur Bali Kedai Sepijak",
                 },
+
                 {
                     id: 4,
-                    name: "Cappuccino",
-                    price: 24000,
+                    name: "Manual Brew",
+                    price: 25000,
                     category: "Kopi",
-                    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD1-9_PoE1P03RZ35BMSc_7WXiSMufhmPQNuIwNK7NumOCRhlaJXjb7zk9B646X96yFX_OFMmj-f3UnIvIMSnOqg-IQacPPMqgEXVAp2BD8wCBEqysaCAI7S3SY_bo8mB_r1LUeqReOQeR3SwGzOkZY6zB3pChqj8veGCKS9yCF5wvPZE54waIhwZ7NcbpcApNKUOnTj3qCbwXX9E_hKPjpNJHG9jNBN8fWogn4kLHxcX8RxUft1yInF490bhGueC0A2TWEhK319EM0",
-                    alt: "A classic cappuccino with foam art",
+                    image: manualBrew,
+                    alt: "Manual Brew Kedai Sepijak",
                 },
+
                 {
                     id: 5,
-                    name: "Red Velvet Latte",
+                    name: "Premium Coffe",
                     price: 30000,
-                    category: "Non-Kopi",
-                    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA0DIwTbQZkCOuDBU8MdyW-Z-RAVjj7kaEKnTaVb2PMF0ReX3uGDcYThhzRxWmVXwLcBzeY1ocbojChgEEdBGlNLB7bCKzjvzkzdoduHQEL69Oa7tu1kG4Eq9UlbDWUq6IDM2f_05XfXFfM72koBMiGQcZSblMKjWHJRFeWDM_vWXfdrXEppY-IvrEN7uOCXSQSzMgvzSF_C20A1wtElft33VA4OH43Oo6KVkpgJIHWzl3-SKAOuCVMQdt6umraFMP268H2LlNb2Dnq",
-                    alt: "A refreshing red velvet latte in a glass",
+                    category: "Kopi",
+                    image: premiumCoffe,
+                    alt: "Premium Coffe Kedai Sepijak",
                 },
+
                 {
                     id: 6,
-                    name: "Pain Au Chocolat",
-                    price: 23000,
-                    category: "Pastry",
-                    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAk1aTemk_zLw0u78BEsrRlECs_echqPFcSju2bDdzEQw5z5ksHjuLIZzuMuoML00CnetkMs72JKnubiOrt5FNSfRXuFY7Sqw_KBqzYUFIGXQHPxmN67tQUqDbZqBhnH0fSmSxGmpx8M6EC7PpNQDGpmTRfZI_mmRNABEfx-28DhX7DNM2WHIhoZBbysn9kV4X87NxTshMcKyICN4ADXGSQxCbw0rTs79QsUdZnwkC4GfVukTMFRjUcvf3tGGkdHwp6le7PvbSjf-bp",
-                    alt: "A delicious pain au chocolat pastry",
+                    name: "Non Coffe",
+                    price: 22000,
+                    category: "Non-Kopi",
+                    image: nonCoffe,
+                    alt: "Minuman Non Coffe Kedai Sepijak",
                 },
             ],
         };
     },
+
     computed: {
         filteredMenuItems() {
             if (this.selectedCategory === "All") {
                 return this.menuItems;
             }
+
             return this.menuItems.filter(
                 (item) => item.category === this.selectedCategory,
             );

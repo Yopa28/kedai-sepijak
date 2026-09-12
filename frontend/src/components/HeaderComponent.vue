@@ -11,7 +11,7 @@
                 class="flex items-center gap-3 hover:scale-105 transition-transform duration-300"
             >
                 <img 
-                    src="@/assets/logo-sepijak.png" 
+                    src="@/assets/images/logo-sepijak.png" 
                     alt="Sepijak Logo" 
                     class="h-14 w-auto drop-shadow-lg"
                 />

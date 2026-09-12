@@ -1,117 +1,254 @@
 <template>
     <section
-        class="py-20 sm:py-28 bg-background-beige text-text-charcoal"
         id="contact"
+        class="bg-background-beige py-20 text-text-charcoal sm:py-28"
     >
         <div class="container mx-auto px-6">
-            <div class="text-center mb-12" data-aos="fade-up">
+
+            <!-- ========================= -->
+            <!-- HEADER -->
+            <!-- ========================= -->
+            <div
+                class="mb-12 max-w-3xl"
+                data-aos="fade-up"
+            >
+                <div class="mb-5 flex items-center gap-3">
+                    <span
+                        class="h-px w-10 bg-accent-amber"
+                    ></span>
+
+                    <span
+                        class="font-body text-xs font-semibold uppercase tracking-[0.2em] text-primary-green"
+                    >
+                        Lokasi
+                    </span>
+                </div>
+
                 <h2
-                    class="font-display text-4xl font-bold text-primary-green md:text-5xl mb-4"
-                    data-aos="fade-up"
-                    data-aos-delay="100"
+                    class="font-display text-5xl font-bold leading-[1.05] text-primary-green md:text-6xl"
                 >
                     Kunjungi Kami
                 </h2>
+
                 <p
-                    class="font-body text-text-charcoal/70 text-lg"
-                    data-aos="fade-up"
-                    data-aos-delay="200"
+                    class="mt-5 max-w-xl font-body text-base leading-7 text-text-charcoal/65 md:text-lg"
                 >
-                    Rasakan kehangatan dan suasana alami di Kedai Sepijak
+                    Datang dan nikmati kopi, makanan, serta suasana
+                    Kedai Sepijak di Purwokerto.
                 </p>
             </div>
 
+
+            <!-- ========================= -->
+            <!-- CONTENT -->
+            <!-- ========================= -->
             <div
-                class="grid grid-cols-1 items-center gap-0 overflow-hidden rounded-xl bg-white shadow-2xl lg:grid-cols-2"
-                data-aos="zoom-in"
-                data-aos-delay="300"
+                class="grid overflow-hidden border border-primary-green/10 bg-white lg:grid-cols-[0.8fr_1.2fr]"
+                data-aos="fade-up"
+                data-aos-delay="150"
             >
+
+                <!-- ========================= -->
+                <!-- INFO -->
+                <!-- ========================= -->
                 <div
-                    class="flex flex-col gap-6 p-8 lg:p-12"
+                    class="flex flex-col justify-between p-8 md:p-10 lg:p-12"
                     data-aos="fade-right"
-                    data-aos-delay="400"
+                    data-aos-delay="250"
                 >
-                    <h3
-                        class="font-display text-3xl font-bold leading-tight text-primary-green md:text-4xl"
-                    >
-                        Temukan Kami
-                    </h3>
-                    <div class="flex flex-col gap-4 text-text-charcoal/90 mt-4">
-                        <p
-                            class="flex items-start gap-3"
-                            data-aos="fade-up"
-                            data-aos-delay="500"
+
+                    <div>
+
+                        <h3
+                            class="mb-8 font-display text-3xl font-bold text-primary-green"
                         >
-                            <span
-                                class="material-symbols-outlined mt-1 text-primary-green"
-                                >location_on</span
-                            >
-                            <span
-                                ><strong>Address:</strong>
-                                {{ contactInfo.address }}</span
-                            >
-                        </p>
-                        <p
-                            class="flex items-start gap-3"
-                            data-aos="fade-up"
-                            data-aos-delay="600"
+                            Temukan Kami
+                        </h3>
+
+
+                        <!-- ADDRESS -->
+                        <div
+                            class="border-t border-primary-green/10 py-6"
                         >
-                            <span
-                                class="material-symbols-outlined mt-1 text-primary-green"
-                                >schedule</span
+                            <div
+                                class="mb-2 flex items-center gap-2"
                             >
-                            <span
-                                ><strong>Opening Hours:</strong>
-                                {{ contactInfo.hours }}</span
+                                <span
+                                    class="material-symbols-outlined text-lg text-primary-green"
+                                >
+                                    location_on
+                                </span>
+
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-[0.15em] text-primary-green"
+                                >
+                                    Alamat
+                                </span>
+                            </div>
+
+                            <p
+                                class="max-w-md pl-7 text-sm leading-6 text-text-charcoal/70"
                             >
-                        </p>
-                        <p
-                            class="flex items-start gap-3"
-                            data-aos="fade-up"
-                            data-aos-delay="700"
+                                {{ contactInfo.address }}
+                            </p>
+                        </div>
+
+
+                        <!-- HOURS -->
+                        <div
+                            class="border-t border-primary-green/10 py-6"
                         >
-                            <span
-                                class="material-symbols-outlined mt-1 text-primary-green"
-                                >call</span
+                            <div
+                                class="mb-2 flex items-center gap-2"
                             >
-                            <span
-                                ><strong>Contact:</strong>
-                                {{ contactInfo.phone }}</span
+                                <span
+                                    class="material-symbols-outlined text-lg text-primary-green"
+                                >
+                                    schedule
+                                </span>
+
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-[0.15em] text-primary-green"
+                                >
+                                    Jam Operasional
+                                </span>
+                            </div>
+
+                            <p
+                                class="pl-7 text-sm text-text-charcoal/70"
                             >
-                        </p>
+                                {{ contactInfo.hours }}
+                            </p>
+                        </div>
+
+
+                        <!-- PHONE -->
+                        <div
+                            class="border-y border-primary-green/10 py-6"
+                        >
+                            <div
+                                class="mb-2 flex items-center gap-2"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-lg text-primary-green"
+                                >
+                                    call
+                                </span>
+
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-[0.15em] text-primary-green"
+                                >
+                                    Kontak
+                                </span>
+                            </div>
+
+                            <a
+                                :href="`tel:${contactInfo.phone}`"
+                                class="pl-7 text-sm text-text-charcoal/70 transition-colors hover:text-primary-green"
+                            >
+                                {{ contactInfo.phone }}
+                            </a>
+                        </div>
+
                     </div>
+
+
+                    <!-- ========================= -->
+                    <!-- CTA -->
+                    <!-- ========================= -->
+                    <div class="mt-8">
+                        <a
+                            :href="googleMapsUrl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group inline-flex items-center gap-3 border-b border-primary-green pb-1 font-body text-sm font-semibold text-primary-green transition-all hover:border-accent-amber hover:text-accent-amber"
+                        >
+                            <span>
+                                Petunjuk arah ke Kedai Sepijak
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-300 group-hover:translate-x-1"
+                            >
+                                arrow_forward
+                            </span>
+                        </a>
+                    </div>
+
                 </div>
+
+
+                <!-- ========================= -->
+                <!-- MAP -->
+                <!-- ========================= -->
                 <div
-                    class="h-80 w-full lg:h-full"
+                    class="relative min-h-[420px] overflow-hidden lg:min-h-[580px]"
                     data-aos="fade-left"
-                    data-aos-delay="500"
+                    data-aos-delay="300"
                 >
                     <iframe
+                        :src="mapUrl"
+                        title="Lokasi Kedai Sepijak di Google Maps"
                         allowfullscreen
-                        class="h-full w-full"
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
-                        :src="mapUrl"
+                        class="absolute inset-0 h-full w-full"
                         style="border: 0"
                     ></iframe>
                 </div>
+
             </div>
+
+
+            <!-- ========================= -->
+            <!-- BOTTOM NOTE -->
+            <!-- ========================= -->
+            <div
+                class="mt-6 flex flex-col justify-between gap-3 text-xs text-text-charcoal/45 sm:flex-row"
+                data-aos="fade-up"
+                data-aos-delay="400"
+            >
+                <span>
+                    Kedai Sepijak · Purwokerto, Jawa Tengah
+                </span>
+
+                <a
+                    :href="googleMapsUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="transition-colors hover:text-primary-green"
+                >
+                    Lihat di Google Maps ↗
+                </a>
+            </div>
+
         </div>
     </section>
 </template>
 
+
 <script>
 export default {
     name: "ContactSection",
+
     data() {
         return {
             contactInfo: {
                 address:
                     "Sky Lounge Taman Mas Kemambang, Bancarkembar, Purwokerto Utara, Banyumas, Jawa Tengah, Indonesia",
-                hours: "DAILY OPEN | 08.00 - 01.00",
-                phone: "0888-2510-000",
+
+                hours:
+                    "Setiap hari · 08.00 — 01.00",
+
+                phone:
+                    "0888-2510-000",
             },
-            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3!2d109.2374172!3d-7.4124204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f59420e3035%3A0x579acae6beb46848!2sKEDAI%20SEPIJAK%20%7C%20Purwokerto!5e0!3m2!1sen!2sid!4v1732000000000!5m2!1sen!2sid",
+
+            googleMapsUrl:
+                "https://maps.app.goo.gl/qXmzXZrqM4SkXkiV7",
+
+            mapUrl:
+                "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3!2d109.2374172!3d-7.4124204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f59420e3035%3A0x579acae6beb46848!2sKEDAI%20SEPIJAK%20%7C%20Purwokerto!5e0!3m2!1sen!2sid!4v1732000000000!5m2!1sen!2sid",
         };
     },
 };

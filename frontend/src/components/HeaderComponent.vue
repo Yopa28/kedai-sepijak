@@ -1,177 +1,373 @@
 <template>
     <header
-        class="sticky top-0 z-50 w-full bg-primary-green/80 backdrop-blur-lg transition-all duration-300 shadow-xl shadow-primary-green/20"
+        :class="[
+            'fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300',
+            scrolled
+                ? 'bg-primary-green shadow-lg shadow-black/10'
+                : 'bg-primary-green/95',
+        ]"
     >
         <div
-            class="container mx-auto flex items-center justify-between px-6 py-4"
+            class="mx-auto flex h-[76px] w-full max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-8"
         >
-            <!-- Logo -->
+            <!-- =========================
+                 LOGO
+            ========================== -->
             <router-link
                 to="/"
-                class="flex items-center gap-3 hover:scale-105 transition-transform duration-300"
+                class="flex shrink-0 items-center"
+                aria-label="Kedai Sepijak - Home"
             >
-                <img 
-                    src="@/assets/images/logo-sepijak.png" 
-                    alt="Sepijak Logo" 
-                    class="h-14 w-auto drop-shadow-lg"
+                <img
+                    src="@/assets/images/logo-sepijak.png"
+                    alt="Logo Kedai Sepijak"
+                    class="h-12 w-auto object-contain sm:h-14"
                 />
             </router-link>
 
-            <!-- Navigation Links -->
-            <nav class="hidden items-center gap-8 md:flex">
+
+            <!-- =========================
+                 DESKTOP NAVIGATION
+            ========================== -->
+            <nav class="hidden items-center gap-7 md:flex lg:gap-9">
                 <router-link
                     to="/"
-                    class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
-                    :class="{ 'text-accent-amber': $route.path === '/' }"
+                    class="nav-link"
+                    :class="{ active: $route.path === '/' }"
                 >
                     Home
                 </router-link>
+
                 <router-link
                     to="/menu"
-                    class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
-                    :class="{ 'text-accent-amber': $route.path === '/menu' }"
+                    class="nav-link"
+                    :class="{ active: $route.path === '/menu' }"
                 >
                     Menu
                 </router-link>
+
                 <router-link
                     to="/feedback"
-                    class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
-                    :class="{
-                        'text-accent-amber': $route.path === '/feedback',
-                    }"
+                    class="nav-link"
+                    :class="{ active: $route.path === '/feedback' }"
                 >
                     Feedback
                 </router-link>
+
                 <router-link
                     to="/polling"
-                    class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
-                    :class="{ 'text-accent-amber': $route.path === '/polling' }"
+                    class="nav-link"
+                    :class="{ active: $route.path === '/polling' }"
                 >
                     Polling
                 </router-link>
+
                 <a
                     href="/#contact"
-                    class="text-sm font-medium text-secondary-sage hover:text-background-beige transition-colors"
+                    class="nav-link"
+                    :class="{
+                        active:
+                            $route.path === '/' &&
+                            $route.hash === '#contact',
+                    }"
                 >
                     Contact
                 </a>
             </nav>
 
-            <!-- Mobile Menu Button -->
-            <button
-                @click="toggleMobileMenu"
-                class="md:hidden flex items-center text-background-beige hover:text-accent-amber transition-colors"
-            >
-                <span class="material-symbols-outlined text-3xl">{{
-                    mobileMenuOpen ? "close" : "menu"
-                }}</span>
-            </button>
 
-            <!-- CTA Button (Desktop) -->
-            <!-- <button
-                class="hidden md:flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-accent-amber text-primary-green text-sm font-bold leading-normal tracking-wide transition-all duration-300 hover:bg-background-beige hover:shadow-lg hover:shadow-accent-amber/30"
+            <!-- =========================
+                 MOBILE MENU BUTTON
+            ========================== -->
+            <button
+                type="button"
+                @click="toggleMobileMenu"
+                class="flex h-11 w-11 items-center justify-center rounded-xl text-background-beige transition-colors duration-200 hover:bg-white/10 md:hidden"
+                :aria-expanded="mobileMenuOpen"
+                aria-label="Toggle navigation menu"
             >
-                <span class="truncate"></span>
-            </button> -->
+                <span class="material-symbols-outlined text-[28px]">
+                    {{ mobileMenuOpen ? "close" : "menu" }}
+                </span>
+            </button>
         </div>
 
-        <!-- Mobile Menu -->
-        <transition name="slide-down">
+
+        <!-- =========================
+             MOBILE MENU
+        ========================== -->
+        <transition name="mobile-menu">
             <div
                 v-if="mobileMenuOpen"
-                class="md:hidden bg-primary-green border-t border-secondary-sage/30"
+                class="border-t border-white/10 bg-primary-green md:hidden"
             >
-                <nav class="container mx-auto px-6 py-4 flex flex-col gap-4">
+                <nav
+                    class="mx-auto flex w-full max-w-7xl flex-col px-5 pb-5 pt-3 sm:px-6"
+                >
+                    <!-- Home -->
                     <router-link
                         to="/"
                         @click="closeMobileMenu"
-                        class="text-base font-medium text-secondary-sage hover:text-accent-amber transition-colors py-2"
-                        :class="{ 'text-accent-amber': $route.path === '/' }"
+                        class="mobile-nav-link"
+                        :class="{
+                            active: $route.path === '/',
+                        }"
                     >
-                        Home
+                        <span>Home</span>
+
+                        <span
+                            v-if="$route.path === '/'"
+                            class="material-symbols-outlined text-[20px]"
+                        >
+                            arrow_forward
+                        </span>
                     </router-link>
+
+
+                    <!-- Menu -->
                     <router-link
                         to="/menu"
                         @click="closeMobileMenu"
-                        class="text-base font-medium text-secondary-sage hover:text-accent-amber transition-colors py-2"
-                        :class="{ 'text-accent-amber': $route.path === '/menu' }"
+                        class="mobile-nav-link"
+                        :class="{
+                            active: $route.path === '/menu',
+                        }"
                     >
-                        Menu
+                        <span>Menu</span>
+
+                        <span
+                            v-if="$route.path === '/menu'"
+                            class="material-symbols-outlined text-[20px]"
+                        >
+                            arrow_forward
+                        </span>
                     </router-link>
+
+
+                    <!-- Feedback -->
                     <router-link
                         to="/feedback"
                         @click="closeMobileMenu"
-                        class="text-base font-medium text-secondary-sage hover:text-accent-amber transition-colors py-2"
+                        class="mobile-nav-link"
                         :class="{
-                            'text-accent-amber': $route.path === '/feedback',
+                            active: $route.path === '/feedback',
                         }"
                     >
-                        Feedback
+                        <span>Feedback</span>
+
+                        <span
+                            v-if="$route.path === '/feedback'"
+                            class="material-symbols-outlined text-[20px]"
+                        >
+                            arrow_forward
+                        </span>
                     </router-link>
+
+
+                    <!-- Polling -->
                     <router-link
                         to="/polling"
                         @click="closeMobileMenu"
-                        class="text-base font-medium text-secondary-sage hover:text-accent-amber transition-colors py-2"
+                        class="mobile-nav-link"
                         :class="{
-                            'text-accent-amber': $route.path === '/polling',
+                            active: $route.path === '/polling',
                         }"
                     >
-                        Polling
+                        <span>Polling</span>
+
+                        <span
+                            v-if="$route.path === '/polling'"
+                            class="material-symbols-outlined text-[20px]"
+                        >
+                            arrow_forward
+                        </span>
                     </router-link>
+
+
+                    <!-- Contact -->
                     <a
                         href="/#contact"
                         @click="closeMobileMenu"
-                        class="text-base font-medium text-secondary-sage hover:text-accent-amber transition-colors py-2"
+                        class="mobile-nav-link"
                     >
-                        Contact
+                        <span>Contact</span>
+
+                        <span
+                            class="material-symbols-outlined text-[20px]"
+                        >
+                            arrow_forward
+                        </span>
                     </a>
-                    <!-- <button
-                        class="mt-4 w-full flex items-center justify-center rounded-full py-3 px-5 bg-accent-amber text-primary-green text-sm font-bold leading-normal tracking-wide transition-all duration-300 hover:bg-background-beige"
-                    >
-                        <span>Order Now</span>
-                    </button> -->
                 </nav>
             </div>
         </transition>
     </header>
 </template>
 
+
 <script>
 export default {
     name: "HeaderComponent",
+
     data() {
         return {
             mobileMenuOpen: false,
+            scrolled: false,
         };
     },
+
+    mounted() {
+        window.addEventListener("scroll", this.handleScroll);
+
+        // Cek posisi awal
+        this.handleScroll();
+    },
+
+    beforeUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
+    },
+
     methods: {
         toggleMobileMenu() {
             this.mobileMenuOpen = !this.mobileMenuOpen;
         },
+
         closeMobileMenu() {
             this.mobileMenuOpen = false;
         },
+
+        handleScroll() {
+            this.scrolled = window.scrollY > 20;
+        },
     },
+
     watch: {
         $route() {
-            // Close mobile menu when route changes
             this.closeMobileMenu();
         },
     },
 };
 </script>
 
+
 <style scoped>
-.slide-down-enter-active,
-.slide-down-leave-active {
-    transition: all 0.3s ease-out;
-    max-height: 500px;
-    overflow: hidden;
+/* =========================================
+   DESKTOP NAVIGATION
+========================================= */
+
+.nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 76px;
+
+    color: rgb(209 221 211);
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease;
 }
 
-.slide-down-enter-from,
-.slide-down-leave-to {
-    max-height: 0;
+.nav-link:hover {
+    color: #f4ead8;
+}
+
+
+/* Active underline */
+.nav-link::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 17px;
+
+    height: 2px;
+
+    background-color: #d9a441;
+
+    transform: scaleX(0);
+    transform-origin: center;
+
+    transition: transform 0.2s ease;
+}
+
+.nav-link.active {
+    color: #d9a441;
+}
+
+.nav-link.active::after {
+    transform: scaleX(1);
+}
+
+
+/* =========================================
+   MOBILE NAVIGATION
+========================================= */
+
+.mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 52px;
+
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+
+    color: rgb(209 221 211);
+
+    font-size: 1rem;
+    font-weight: 500;
+
+    transition:
+        color 0.2s ease,
+        padding-left 0.2s ease;
+}
+
+.mobile-nav-link:last-child {
+    border-bottom: none;
+}
+
+.mobile-nav-link:hover {
+    color: #f4ead8;
+}
+
+.mobile-nav-link.active {
+    color: #d9a441;
+}
+
+
+/* =========================================
+   MOBILE MENU ANIMATION
+========================================= */
+
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    transform-origin: top;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
     opacity: 0;
+    transform: translateY(-8px);
+}
+
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-link,
+    .mobile-nav-link,
+    .mobile-menu-enter-active,
+    .mobile-menu-leave-active {
+        transition: none;
+    }
 }
 </style>

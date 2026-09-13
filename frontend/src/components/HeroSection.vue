@@ -6,28 +6,29 @@
         <!-- ========================================
              BACKGROUND
         ========================================= -->
+        <!-- Pastikan background ikut tercetak dengan pengaturan global CSS -->
         <div
             class="absolute inset-0 z-0 bg-gradient-to-br from-primary-green via-[#12332a] to-[#0a1f19]"
         ></div>
 
-        <!-- Fine noise / texture overlay for depth -->
+        <!-- Fine noise / texture overlay for depth (Disembunyikan saat cetak) -->
         <div
-            class="absolute inset-0 z-0 opacity-[0.04] pointer-events-none"
+            class="absolute inset-0 z-0 opacity-[0.04] pointer-events-none print:hidden"
             style="background-image: radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0); background-size: 22px 22px;"
         ></div>
 
-        <!-- Soft decorative glow -->
+        <!-- Soft decorative glow (Disembunyikan saat cetak) -->
         <div
-            class="absolute top-1/4 right-0 w-[520px] h-[520px] rounded-full bg-accent-amber/[0.06] blur-[120px] pointer-events-none"
+            class="absolute top-1/4 right-0 w-[520px] h-[520px] rounded-full bg-accent-amber/[0.06] blur-[120px] pointer-events-none print:hidden"
         ></div>
 
         <div
-            class="absolute bottom-0 left-0 w-[460px] h-[460px] rounded-full bg-secondary-sage/[0.05] blur-[120px] pointer-events-none"
+            class="absolute bottom-0 left-0 w-[460px] h-[460px] rounded-full bg-secondary-sage/[0.05] blur-[120px] pointer-events-none print:hidden"
         ></div>
 
         <!-- Hairline top border for a "framed" premium feel -->
         <div
-            class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-amber/30 to-transparent z-10"
+            class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-amber/30 to-transparent z-10 print:hidden"
         ></div>
 
         <!-- ========================================
@@ -72,8 +73,9 @@
                         Kedai
                         <span class="relative inline-block text-accent-amber ml-3 sm:ml-4">
                             Sepijak
+                            <!-- SVG coretan disembunyikan saat cetak agar judul lebih rapi -->
                             <svg
-                                class="absolute left-0 -bottom-2 w-full h-3 text-accent-amber/50"
+                                class="absolute left-0 -bottom-2 w-full h-3 text-accent-amber/50 print:hidden"
                                 viewBox="0 0 200 12"
                                 preserveAspectRatio="none"
                                 fill="none"
@@ -114,15 +116,16 @@
                         cerita, setiap kunjungan adalah kenangan.
                     </p>
 
-                    <!-- CTA -->
+                    <!-- CTA (Tombol disembunyikan saat dicetak karena tidak interaktif di kertas) -->
                     <div
-                        class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                        class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start print:hidden"
                         data-aos="fade-up"
                         data-aos-delay="500"
                     >
                         <!-- Menu -->
                         <a
                             href="#menu"
+                            aria-label="Lihat Menu Kedai Sepijak"
                             class="group relative inline-flex items-center justify-center gap-3 overflow-hidden bg-accent-amber text-primary-green font-body font-bold text-sm tracking-wide px-8 py-4 rounded-full transition-all duration-500 shadow-[0_15px_40px_-10px_rgba(218,165,82,0.5)] hover:shadow-[0_20px_50px_-10px_rgba(218,165,82,0.65)] hover:-translate-y-0.5"
                         >
                             <span class="relative z-10 uppercase">Lihat Menu</span>
@@ -141,6 +144,7 @@
                         <!-- Contact -->
                         <a
                             href="#contact"
+                            aria-label="Hubungi Kedai Sepijak"
                             class="group inline-flex items-center justify-center gap-3 border border-background-beige/30 text-background-beige font-body font-semibold text-sm tracking-wide uppercase px-8 py-4 rounded-full backdrop-blur-sm transition-all duration-500 hover:border-background-beige/70 hover:bg-background-beige/[0.06] hover:-translate-y-0.5"
                         >
                             <span>Hubungi Kami</span>
@@ -216,9 +220,9 @@
                     data-aos="fade-left"
                     data-aos-delay="300"
                 >
-                    <!-- Decorative Glow -->
+                    <!-- Decorative Glow (Disembunyikan saat cetak) -->
                     <div
-                        class="absolute -inset-6 bg-accent-amber/[0.08] rounded-[2.5rem] blur-3xl"
+                        class="absolute -inset-6 bg-accent-amber/[0.08] rounded-[2.5rem] blur-3xl print:hidden"
                     ></div>
 
                     <!-- Main Image -->
@@ -227,32 +231,35 @@
                         data-aos="zoom-in"
                         data-aos-delay="500"
                     >
+                        <!-- Optimasi LCP: fetchpriority="high" dan loading="eager" -->
                         <img
                             :src="kedaiSuasana"
                             alt="Suasana Kedai Sepijak"
-                            class="w-full h-[420px] sm:h-[480px] lg:h-[540px] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+                            fetchpriority="high"
+                            loading="eager"
+                            class="w-full h-[420px] sm:h-[480px] lg:h-[540px] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04] print:object-contain print:h-auto print:max-h-[300px]"
                         />
 
-                        <!-- Image Overlay: darker at top (for caption) and bottom (for depth), clear in the middle -->
+                        <!-- Image Overlay -->
                         <div
-                            class="absolute inset-0 bg-gradient-to-b from-[#0a1f19]/80 via-transparent to-[#0a1f19]/50"
+                            class="absolute inset-0 bg-gradient-to-b from-[#0a1f19]/80 via-transparent to-[#0a1f19]/50 print:hidden"
                         ></div>
 
-                        <!-- Image Caption: moved to TOP so it never clashes with floating cards below -->
+                        <!-- Image Caption -->
                         <div
-                            class="absolute top-0 left-0 right-0 p-6 md:p-8 pr-28 sm:pr-32"
+                            class="absolute top-0 left-0 right-0 p-6 md:p-8 pr-28 sm:pr-32 print:relative print:p-0 print:pt-4 print:text-black"
                         >
                             <div class="flex items-center gap-2 mb-3">
-                                <span class="w-5 h-px bg-accent-amber/80"></span>
+                                <span class="w-5 h-px bg-accent-amber/80 print:bg-black"></span>
                                 <span
-                                    class="text-accent-amber text-[11px] font-semibold tracking-[0.25em] uppercase"
+                                    class="text-accent-amber print:text-black text-[11px] font-semibold tracking-[0.25em] uppercase"
                                 >
                                     Tempat Bertemu &amp; Bersantai
                                 </span>
                             </div>
 
                             <h2
-                                class="font-display italic text-xl md:text-2xl font-medium text-background-beige leading-snug"
+                                class="font-display italic text-xl md:text-2xl font-medium text-background-beige print:text-black leading-snug"
                             >
                                 "Ruang untuk setiap cerita."
                             </h2>
@@ -260,21 +267,21 @@
                     </div>
 
                     <!-- ==================================
-                         FLOATING PHOTO CLUSTER (stacked bottom-right,
-                         feels curated instead of two separate corners)
+                         FLOATING PHOTO CLUSTER 
                     =================================== -->
                     <div
-                        class="absolute z-20 -bottom-10 -right-6 sm:-right-10 w-[13.5rem] h-32 sm:w-72 sm:h-40"
+                        class="absolute z-20 -bottom-10 -right-6 sm:-right-10 w-[13.5rem] h-32 sm:w-72 sm:h-40 print:hidden"
                         data-aos="fade-up"
                         data-aos-delay="650"
                     >
-                        <!-- Back card: Menu, peeking out top-left, slightly rotated -->
+                        <!-- Back card -->
                         <div
                             class="absolute top-0 left-0 w-28 h-28 sm:w-36 sm:h-36 rounded-xl overflow-hidden border-[3px] border-primary-green shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] -rotate-6 transition-transform duration-500 group-hover:-rotate-3"
                         >
                             <img
                                 :src="kedaiMenu"
                                 alt="Menu Kedai Sepijak"
+                                loading="lazy"
                                 class="w-full h-full object-cover"
                             />
 
@@ -289,13 +296,14 @@
                             </div>
                         </div>
 
-                        <!-- Front card: Kopi, offset bottom-right, on top -->
+                        <!-- Front card -->
                         <div
                             class="absolute bottom-0 right-0 w-32 h-24 sm:w-44 sm:h-32 rounded-xl overflow-hidden border-[3px] border-background-beige shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] rotate-3 hover:rotate-0 transition-all duration-500 hover:-translate-y-1"
                         >
                             <img
                                 :src="kedaiKopi"
                                 alt="Kopi Kedai Sepijak"
+                                loading="lazy"
                                 class="w-full h-full object-cover"
                             />
 
@@ -327,18 +335,18 @@
             >
                 <!-- Feature 1 -->
                 <div
-                    class="feature-card group"
+                    class="feature-card group print:border-black print:text-black print:bg-white"
                     data-aos="fade-up"
                     data-aos-delay="100"
                 >
-                    <div class="feature-icon">
+                    <div class="feature-icon print:text-black print:bg-gray-100 print:border-gray-300">
                         <span class="material-symbols-outlined">grain</span>
                     </div>
 
                     <div>
-                        <h3 class="feature-title">Biji Kopi Pilihan</h3>
+                        <h3 class="feature-title print:text-black">Biji Kopi Pilihan</h3>
 
-                        <p class="feature-description">
+                        <p class="feature-description print:text-black">
                             Dipilih langsung dari petani lokal terbaik untuk
                             menghasilkan cita rasa kopi yang sempurna.
                         </p>
@@ -347,18 +355,18 @@
 
                 <!-- Feature 2 -->
                 <div
-                    class="feature-card group"
+                    class="feature-card group print:border-black print:text-black print:bg-white"
                     data-aos="fade-up"
                     data-aos-delay="200"
                 >
-                    <div class="feature-icon">
+                    <div class="feature-icon print:text-black print:bg-gray-100 print:border-gray-300">
                         <span class="material-symbols-outlined">favorite</span>
                     </div>
 
                     <div>
-                        <h3 class="feature-title">Dibuat dengan Cinta</h3>
+                        <h3 class="feature-title print:text-black">Dibuat dengan Cinta</h3>
 
-                        <p class="feature-description">
+                        <p class="feature-description print:text-black">
                             Setiap cangkir diseduh dengan perhatian penuh oleh
                             barista berpengalaman kami.
                         </p>
@@ -367,18 +375,18 @@
 
                 <!-- Feature 3 -->
                 <div
-                    class="feature-card group"
+                    class="feature-card group print:border-black print:text-black print:bg-white"
                     data-aos="fade-up"
                     data-aos-delay="300"
                 >
-                    <div class="feature-icon">
+                    <div class="feature-icon print:text-black print:bg-gray-100 print:border-gray-300">
                         <span class="material-symbols-outlined">groups</span>
                     </div>
 
                     <div>
-                        <h3 class="feature-title">Suasana Hangat</h3>
+                        <h3 class="feature-title print:text-black">Suasana Hangat</h3>
 
-                        <p class="feature-description">
+                        <p class="feature-description print:text-black">
                             Tempat berkumpul yang nyaman untuk keluarga, teman,
                             maupun rekan kerja.
                         </p>
@@ -388,11 +396,12 @@
         </div>
 
         <!-- ========================================
-             SCROLL INDICATOR
+             SCROLL INDICATOR (Disembunyikan saat cetak)
         ========================================= -->
         <a
             href="#menu"
-            class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-2 text-background-beige/50 hover:text-background-beige transition-colors duration-300"
+            aria-label="Scroll ke bagian menu"
+            class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-2 text-background-beige/50 hover:text-background-beige transition-colors duration-300 print:hidden"
             data-aos="fade-up"
             data-aos-delay="1000"
         >
@@ -402,31 +411,39 @@
     </section>
 </template>
 
-<script>
+<script setup>
+/* 
+  Sintaks Vue 3 <script setup> 
+  Tidak perlu export default atau return data. 
+  Import langsung tersedia di <template>.
+*/
 import kedaiInterior from "@/assets/images/kedai-interior.jpg";
 import kedaiSuasana from "@/assets/images/kedai-suasana.jpg";
 import kedaiMenu from "@/assets/images/kedai-menu.jpg";
 import kedaiKopi from "@/assets/images/kedai-kopi.jpg";
+</script>
 
+<script>
+// Jika Anda membutuhkan deklarasi properti komponen eksternal (opsional)
 export default {
     name: "HeroSection",
-
-    data() {
-        return {
-            kedaiInterior,
-            kedaiSuasana,
-            kedaiMenu,
-            kedaiKopi,
-        };
-    },
 };
 </script>
 
 <style scoped>
 /* ========================================
+   GLOBAL PRINT FIX (Opsional ditaruh di sini jika belum ada di file utama)
+======================================== */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* ========================================
    HERO
 ======================================== */
-
 .hero-section {
     background: #0f3d32;
 }
@@ -434,7 +451,6 @@ export default {
 /* ========================================
    SCROLL LINE ANIMATION
 ======================================== */
-
 .scroll-line {
     animation: scroll-move 1.8s ease-in-out infinite;
     transform-origin: top;
@@ -449,7 +465,6 @@ export default {
 /* ========================================
    FEATURE CARD
 ======================================== */
-
 .feature-card {
     position: relative;
     display: flex;
@@ -484,7 +499,6 @@ export default {
 /* ========================================
    FEATURE ICON
 ======================================== */
-
 .feature-icon {
     flex-shrink: 0;
 
@@ -517,7 +531,6 @@ export default {
 /* ========================================
    FEATURE TEXT
 ======================================== */
-
 .feature-title {
     color: #f6f0df;
     font-family: inherit;
@@ -538,7 +551,6 @@ export default {
 /* ========================================
    RESPONSIVE
 ======================================== */
-
 @media (max-width: 1023px) {
     .hero-section {
         min-height: auto;

@@ -1,149 +1,226 @@
 <template>
-    <div class="min-h-screen bg-background-beige">
-        <!-- Hero Section -->
-        <HeroSection />
+  <main class="min-h-screen overflow-x-hidden bg-background-beige">
 
-        <!-- About Section -->
-        <AboutSection />
+    <!-- =========================
+         HERO
+    ========================== -->
+    <section id="home">
+      <HeroSection />
+    </section>
 
-        <!-- Menu Section -->
-        <MenuSection />
 
-        <!-- Call to Action for Feedback & Polling -->
-        <section class="py-20 bg-primary-green relative overflow-hidden">
-            <!-- Decorative Elements -->
-            <div
-                class="absolute top-10 right-10 w-32 h-32 bg-accent-amber rounded-full opacity-20 blur-3xl animate-pulse"
-            ></div>
-            <div
-                class="absolute bottom-10 left-10 w-40 h-40 bg-secondary-sage rounded-full opacity-20 blur-3xl animate-pulse"
-                style="animation-delay: 1s"
-            ></div>
+    <!-- =========================
+         ABOUT
+    ========================== -->
+    <section id="about">
+      <AboutSection />
+    </section>
 
-            <div class="container mx-auto px-6 relative z-10">
-                <div
-                    class="text-center mb-12"
-                    data-aos="fade-up"
-                    data-aos-delay="100"
+
+    <!-- =========================
+         MENU
+    ========================== -->
+    <section id="menu">
+      <MenuSection />
+    </section>
+
+
+    <!-- =========================
+         FEEDBACK / POLLING CTA
+    ========================== -->
+    <section
+      id="feedback"
+      class="bg-background-beige px-4 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20"
+    >
+      <div class="mx-auto w-full max-w-7xl">
+
+        <!-- Section Heading -->
+        <div class="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+          <span
+            class="text-sm font-semibold uppercase tracking-[0.18em] text-primary-green"
+          >
+            Suara Kamu
+          </span>
+
+          <h2
+            class="mt-3 text-3xl font-bold leading-tight text-primary-green sm:text-4xl lg:text-5xl"
+          >
+            Bantu Kami Jadi Lebih Baik
+          </h2>
+
+          <p
+            class="mx-auto mt-4 max-w-xl text-sm leading-7 text-gray-600 sm:text-base"
+          >
+            Ceritakan pengalaman kamu di Kedai Sepijak dan ikut menentukan
+            apa yang ingin kami hadirkan selanjutnya.
+          </p>
+        </div>
+
+
+        <!-- CTA Cards -->
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
+
+          <!-- Feedback -->
+          <div
+            class="group relative overflow-hidden rounded-2xl border border-primary-green/10 bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md sm:p-8"
+          >
+            <div class="relative z-10">
+
+              <!-- Icon -->
+              <div
+                class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-green/10 text-primary-green"
+              >
+                <span class="material-symbols-outlined text-2xl">
+                  rate_review
+                </span>
+              </div>
+
+              <h3
+                class="text-xl font-bold text-primary-green sm:text-2xl"
+              >
+                Bagikan Pengalamanmu
+              </h3>
+
+              <p
+                class="mt-3 max-w-lg text-sm leading-7 text-gray-600 sm:text-base"
+              >
+                Punya pengalaman menarik di Kedai Sepijak?
+                Berikan feedback agar kami bisa terus memberikan
+                pelayanan yang lebih baik.
+              </p>
+
+              <div class="mt-7">
+                <RouterLink
+                  to="/feedback"
+                  class="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-primary-green px-5 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-primary-green/90 sm:w-auto"
                 >
-                    <h2
-                        class="font-display text-4xl md:text-5xl font-bold text-background-beige mb-4"
-                    >
-                        Bagikan Pengalaman Anda
-                    </h2>
-                    <p class="text-secondary-sage text-lg max-w-2xl mx-auto">
-                        Kami menghargai pendapat Anda! Bantu kami meningkatkan
-                        kualitas dengan membagikan masukan Anda atau memilih
-                        acara menarik berikutnya.
-                    </p>
-                </div>
+                  Berikan Feedback
 
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-                >
-                    <!-- Feedback Card -->
-                    <div
-                        class="group bg-white/10 backdrop-blur-lg border border-background-beige/20 rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
-                        data-aos="fade-right"
-                        data-aos-delay="200"
-                    >
-                        <div
-                            class="bg-accent-amber/20 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
-                        >
-                            <span
-                                class="material-symbols-outlined text-4xl text-accent-amber"
-                                >rate_review</span
-                            >
-                        </div>
-                        <h3
-                            class="font-display text-2xl font-bold text-background-beige mb-4"
-                        >
-                            Umpan Balik & Saran
-                        </h3>
-                        <p class="text-background-beige/80 mb-6">
-                            Bagikan Pengalaman Anda, Beri nilai layanan kami,
-                            dan bantu kami melayani Anda dengan lebih baik.
-                            Masukan Anda penting!
-                        </p>
-                        <router-link
-                            to="/feedback"
-                            class="inline-flex items-center gap-2 bg-accent-amber text-primary-green font-bold px-6 py-3 rounded-full hover:bg-background-beige transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-                        >
-                            <span>Berikan Umpan Balik</span>
-                            <span class="material-symbols-outlined"
-                                >arrow_forward</span
-                            >
-                        </router-link>
-                    </div>
+                  <span class="material-symbols-outlined text-[20px]">
+                    arrow_forward
+                  </span>
+                </RouterLink>
+              </div>
 
-                    <!-- Polling Card -->
-                    <div
-                        class="group bg-white/10 backdrop-blur-lg border border-background-beige/20 rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2"
-                        data-aos="fade-left"
-                        data-aos-delay="300"
-                    >
-                        <div
-                            class="bg-accent-amber/20 w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
-                        >
-                            <span
-                                class="material-symbols-outlined text-4xl text-accent-amber"
-                                >how_to_vote</span
-                            >
-                        </div>
-                        <h3
-                            class="font-display text-2xl font-bold text-background-beige mb-4"
-                        >
-                            Pilih Acara Berikutnya
-                        </h3>
-                        <p class="text-background-beige/80 mb-6">
-                            Bantu kami memilih acara seru berikutnya! Suara Anda
-                            menentukan apa yang akan terjadi di Kedai Sepijak.
-                        </p>
-                        <router-link
-                            to="/polling"
-                            class="inline-flex items-center gap-2 bg-accent-amber text-primary-green font-bold px-6 py-3 rounded-full hover:bg-background-beige transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-                        >
-                            <span>Pilih Sekarang</span>
-                            <span class="material-symbols-outlined"
-                                >arrow_forward</span
-                            >
-                        </router-link>
-                    </div>
-                </div>
             </div>
-        </section>
+          </div>
 
-        <!-- Testimonial Section -->
-        <TestimonialSection />
 
-        <!-- Contact Section -->
-        <ContactSection />
-    </div>
+          <!-- Polling -->
+          <div
+            class="group relative overflow-hidden rounded-2xl border border-primary-green/10 bg-primary-green p-6 shadow-sm transition-shadow duration-300 hover:shadow-md sm:p-8"
+          >
+            <div class="relative z-10">
+
+              <!-- Icon -->
+              <div
+                class="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-white"
+              >
+                <span class="material-symbols-outlined text-2xl">
+                  how_to_vote
+                </span>
+              </div>
+
+              <h3
+                class="text-xl font-bold text-white sm:text-2xl"
+              >
+                Ikut Polling
+              </h3>
+
+              <p
+                class="mt-3 max-w-lg text-sm leading-7 text-white/75 sm:text-base"
+              >
+                Menurut kamu, menu atau fasilitas apa yang
+                sebaiknya kami hadirkan berikutnya?
+                Suaramu bisa membantu kami menentukan pilihan.
+              </p>
+
+              <div class="mt-7">
+                <RouterLink
+                  to="/polling"
+                  class="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-primary-green transition-colors duration-200 hover:bg-gray-100 sm:w-auto"
+                >
+                  Ikut Polling
+
+                  <span class="material-symbols-outlined text-[20px]">
+                    arrow_forward
+                  </span>
+                </RouterLink>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================
+         TESTIMONIAL
+    ========================== -->
+    <section id="testimonial">
+      <TestimonialSection />
+    </section>
+
+
+    <!-- =========================
+         CONTACT
+    ========================== -->
+    <section id="contact">
+      <ContactSection />
+    </section>
+
+  </main>
 </template>
 
-<script>
-import HeroSection from "../components/HeroSection.vue";
-import AboutSection from "../components/AboutSection.vue";
-import MenuSection from "../components/MenuSection.vue";
-import TestimonialSection from "../components/TestimonialSection.vue";
-import ContactSection from "../components/ContactSection.vue";
 
-export default {
-    name: "Home",
-    components: {
-        HeroSection,
-        AboutSection,
-        MenuSection,
-        TestimonialSection,
-        ContactSection,
-    },
-    mounted() {
-        // Scroll to top when component is mounted
-        window.scrollTo(0, 0);
-    },
-};
+<script setup>
+import { onMounted } from "vue";
+
+import HeroSection from "@/components/HeroSection.vue";
+import AboutSection from "@/components/AboutSection.vue";
+import MenuSection from "@/components/MenuSection.vue";
+import TestimonialSection from "@/components/TestimonialSection.vue";
+import ContactSection from "@/components/ContactSection.vue";
+
+
+/*
+|--------------------------------------------------------------------------
+| Scroll ke atas ketika Home dibuka
+|--------------------------------------------------------------------------
+*/
+onMounted(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});
 </script>
 
+
 <style scoped>
-/* Additional styles if needed */
+/*
+|--------------------------------------------------------------------------
+| Prevent horizontal overflow
+|--------------------------------------------------------------------------
+*/
+
+main {
+  width: 100%;
+  max-width: 100%;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Mobile
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 640px) {
+  main {
+    overflow-x: hidden;
+  }
+}
 </style>

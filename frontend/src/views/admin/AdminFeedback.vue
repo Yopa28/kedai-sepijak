@@ -421,9 +421,11 @@ const filteredFeedback = computed(() => {
 })
 
 const averageRatingByType = (type) => {
-  const filtered = filteredFeedback.value.filter(f => f[`rating_${type}`] !== null)
+  const filtered = filteredFeedback.value
+    .map(f => Number(f[`rating_${type}`]))
+    .filter(Number.isFinite)
   if (filtered.length === 0) return 0
-  const sum = filtered.reduce((acc, f) => acc + f[`rating_${type}`], 0)
+  const sum = filtered.reduce((acc, rating) => acc + rating, 0)
   return sum / filtered.length
 }
 

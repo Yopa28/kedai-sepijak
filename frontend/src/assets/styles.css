@@ -107,3 +107,70 @@
         }
     }
 }
+
+/* Shared admin surface styles for the CRUD views that still use utility markup. */
+.admin-content .rounded-lg.shadow-md,
+.admin-content .rounded-lg.shadow-xl,
+.admin-content .rounded-xl.shadow-lg {
+    border: 1px solid var(--admin-border, #e6e0d5);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(35, 51, 43, 0.05);
+}
+
+.admin-content .bg-white {
+    background-color: var(--admin-surface, #ffffff);
+}
+
+.admin-content input:not([type="checkbox"]),
+.admin-content select,
+.admin-content textarea {
+    border-color: var(--admin-border, #e6e0d5);
+    border-radius: 7px;
+    color: var(--admin-ink, #24312b);
+}
+
+.admin-content input:not([type="checkbox"]):focus,
+.admin-content select:focus,
+.admin-content textarea:focus {
+    border-color: var(--sepijak-gold, #b57a2a);
+    box-shadow: 0 0 0 3px rgba(181, 122, 42, 0.14);
+    outline: none;
+}
+
+.admin-content table thead {
+    background: #f7f5f0;
+}
+
+.admin-content table th {
+    color: #66736c;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+
+.admin-content table tbody tr:hover {
+    background: #fbfaf7;
+}
+
+.admin-content .bg-purple-600,
+.admin-content .bg-green-600,
+.admin-content .bg-amber-600 {
+    background-color: var(--sepijak-forest, #1e4d3b);
+}
+
+.admin-content .bg-purple-600:hover,
+.admin-content .bg-green-600:hover,
+.admin-content .bg-amber-600:hover {
+    background-color: #2a6b4f;
+}
+
+.admin-content .text-purple-600,
+.admin-content .text-amber-600,
+.admin-content .text-green-600 {
+    color: var(--sepijak-forest, #1e4d3b);
+}
+
+@media (max-width: 640px) {
+    .admin-content .overflow-x-auto {
+        scrollbar-color: #c8bda9 transparent;
+    }
+}

@@ -1423,7 +1423,7 @@ export default {
   width: 100%;
   padding: 24px;
   box-sizing: border-box;
-  color: #1e293b;
+  color: #24312b;
 }
 
 /* ==========================================
@@ -1440,9 +1440,10 @@ export default {
 
 .page-title {
   margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  color: #0f172a;
+  font-family: "Playfair Display", serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: #24312b;
 }
 
 .page-description {
@@ -1501,7 +1502,7 @@ export default {
   gap: 7px;
   border: 0;
   border-radius: 8px;
-  background: #0f172a;
+  background: #1e4d3b;
   color: #ffffff;
   font-size: 13px;
   font-weight: 600;
@@ -1510,7 +1511,7 @@ export default {
 }
 
 .refresh-button:hover:not(:disabled) {
-  background: #1e293b;
+  background: #2a6b4f;
 }
 
 .refresh-button:disabled {
@@ -1545,8 +1546,8 @@ export default {
   align-items: center;
   gap: 16px;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border: 1px solid #e6e0d5;
+  border-radius: 10px;
   box-sizing: border-box;
 }
 
@@ -1617,8 +1618,8 @@ export default {
   min-width: 0;
   padding: 20px;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border: 1px solid #e6e0d5;
+  border-radius: 10px;
 }
 
 .chart-header {
@@ -1668,8 +1669,8 @@ export default {
 .feedback-card {
   padding: 20px;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
+  border: 1px solid #e6e0d5;
+  border-radius: 10px;
 }
 
 .section-header {
@@ -1957,7 +1958,7 @@ export default {
   padding: 0 14px;
   border: 0;
   border-radius: 8px;
-  background: #0f172a;
+  background: #1e4d3b;
   color: #ffffff;
   font-size: 12px;
   font-weight: 600;

@@ -12,20 +12,22 @@
         </button>
       </div>
 
-      <div v-if="!sidebarCollapsed" class="sidebar-section-label">Workspace</div>
       <nav class="sidebar-nav" aria-label="Navigasi utama">
-        <router-link
-          v-for="item in menuItems"
-          :key="item.name"
-          :to="item.path"
-          :title="sidebarCollapsed ? item.label : undefined"
-          :class="['sidebar-link', { 'is-active': isActiveRoute(item.path) }]"
-          @click="closeSidebarOnMobile"
-        >
-          <component :is="item.icon" :size="19" stroke-width="1.9" />
-          <span v-if="!sidebarCollapsed">{{ item.label }}</span>
-          <span v-if="!sidebarCollapsed && isActiveRoute(item.path)" class="active-dot"></span>
-        </router-link>
+        <div v-for="group in menuGroups" :key="group.label" class="sidebar-group">
+          <div v-if="!sidebarCollapsed" class="sidebar-section-label">{{ group.label }}</div>
+          <router-link
+            v-for="item in group.items"
+            :key="item.name"
+            :to="item.path"
+            :title="sidebarCollapsed ? item.label : undefined"
+            :class="['sidebar-link', { 'is-active': isActiveRoute(item.path) }]"
+            @click="closeSidebarOnMobile"
+          >
+            <component :is="item.icon" :size="19" stroke-width="1.9" />
+            <span v-if="!sidebarCollapsed">{{ item.label }}</span>
+            <span v-if="!sidebarCollapsed && isActiveRoute(item.path)" class="active-dot"></span>
+          </router-link>
+        </div>
       </nav>
 
       <div class="sidebar-footer">
@@ -105,12 +107,14 @@ const sidebarOpen = ref(false);
 const sidebarCollapsed = ref(false);
 const darkMode = ref(false);
 
-const menuItems = [
-  { name: "dashboard", label: "Dashboard", path: "/admin/dashboard", icon: BarChart3 },
-  { name: "waiters", label: "Pelayan", path: "/admin/waiters", icon: UsersRound },
-  { name: "feedback", label: "Feedback", path: "/admin/feedback", icon: MessageSquare },
-  { name: "polls", label: "Polling & Event", path: "/admin/polls", icon: CalendarDays },
-  { name: "sentiment", label: "Sentiment Analytics", path: "/admin/sentiment", icon: BarChart3 },
+const menuGroups = [
+  { label: "Overview", items: [{ name: "dashboard", label: "Dashboard", path: "/admin/dashboard", icon: BarChart3 }] },
+  { label: "Customer experience", items: [
+    { name: "waiters", label: "Pelayan", path: "/admin/waiters", icon: UsersRound },
+    { name: "feedback", label: "Feedback", path: "/admin/feedback", icon: MessageSquare },
+    { name: "polls", label: "Polling & Event", path: "/admin/polls", icon: CalendarDays },
+  ] },
+  { label: "Analytics", items: [{ name: "sentiment", label: "Sentiment Analytics", path: "/admin/sentiment", icon: BarChart3 }] },
 ];
 
 const pageTitle = computed(() => ({
@@ -144,13 +148,14 @@ onMounted(() => {
 
 <style>
 .admin-shell {
-  --admin-bg: #f5f7fb;
+  --admin-bg: #f6f4ef;
   --admin-surface: #ffffff;
-  --admin-border: #e5e7eb;
-  --admin-text: #111827;
-  --admin-muted: #6b7280;
+  --admin-border: #e6e0d5;
+  --admin-text: #24312b;
+  --admin-muted: #748078;
   --admin-accent: #1e4d3b;
-  --admin-accent-soft: #e7f1ec;
+  --admin-accent-soft: #e7efe9;
+  --admin-gold: #b57a2a;
   min-height: 100vh;
   background: var(--admin-bg);
   color: var(--admin-text);
@@ -165,23 +170,24 @@ onMounted(() => {
 .brand-copy { display: flex; min-width: 0; flex-direction: column; }
 .brand-copy strong { color: #fff; font-size: 14px; letter-spacing: .01em; }
 .brand-copy span { margin-top: 2px; color: #91aaa0; font-size: 11px; }
-.sidebar-section-label { padding: 26px 20px 9px; color: #6f8c80; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.sidebar-nav { display: flex; flex: 1; flex-direction: column; gap: 5px; padding: 0 12px; }
+.sidebar-group + .sidebar-group { margin-top: 14px; }
+.sidebar-section-label { padding: 0 20px 9px; color: #789489; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.sidebar-nav { display: flex; flex: 1; flex-direction: column; gap: 5px; overflow-y: auto; padding: 24px 12px; }
 .sidebar-link { position: relative; display: flex; min-height: 42px; align-items: center; gap: 12px; border-radius: 8px; padding: 0 12px; color: #9db3aa; font-size: 13px; font-weight: 600; text-decoration: none; transition: background-color 160ms ease, color 160ms ease; }
 .is-collapsed .sidebar-link { justify-content: center; padding: 0; }
 .sidebar-link:hover { background: #203b31; color: #fff; }
-.sidebar-link.is-active { background: #d3a15b; color: #18251f; box-shadow: 0 8px 18px rgba(0,0,0,.14); }
+.sidebar-link.is-active { background: #d7a45d; color: #18251f; box-shadow: 0 8px 18px rgba(0,0,0,.14); }
 .active-dot { margin-left: auto; height: 5px; width: 5px; border-radius: 999px; background: #18251f; }
 .sidebar-footer { display: flex; flex-direction: column; gap: 5px; border-top: 1px solid #263e35; padding: 14px 12px 18px; }
 .sidebar-collapse, .logout-link { border: 0; background: transparent; font: inherit; cursor: pointer; }
 .logout-link:hover { background: #492b2b; color: #f5b4b4; }
 .admin-main { min-height: 100vh; margin-left: 260px; transition: margin-left 220ms ease; }
 .admin-sidebar.is-collapsed ~ .admin-main { margin-left: 78px; }
-.admin-header { position: sticky; top: 0; z-index: 20; display: flex; min-height: 82px; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--admin-border); background: var(--admin-surface); padding: 16px 32px; }
+.admin-header { position: sticky; top: 0; z-index: 20; display: flex; min-height: 82px; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--admin-border); background: rgba(255,255,255,.94); padding: 16px 32px; backdrop-filter: blur(12px); }
 .header-left, .header-actions, .profile-button, .header-search { display: flex; align-items: center; }
 .header-left { gap: 14px; }
-.eyebrow { margin: 0 0 4px; color: var(--admin-muted); font-size: 11px; font-weight: 600; }
-.header-left h1 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.eyebrow { margin: 0 0 4px; color: var(--admin-gold); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.header-left h1 { margin: 0; color: var(--admin-text); font-family: "Playfair Display", serif; font-size: 22px; font-weight: 800; letter-spacing: 0; }
 .header-actions { gap: 11px; }
 .header-search { width: min(250px, 28vw); gap: 8px; border: 1px solid var(--admin-border); border-radius: 7px; background: var(--admin-surface); padding: 8px 10px; color: var(--admin-muted); }
 .header-search input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--admin-text); font-size: 12px; }
@@ -196,7 +202,7 @@ onMounted(() => {
 .profile-copy { display: flex; min-width: 74px; flex-direction: column; }
 .profile-copy strong { color: var(--admin-text); font-size: 12px; }
 .profile-copy small { margin-top: 2px; color: var(--admin-muted); font-size: 10px; }
-.admin-content { padding: 32px; }
+.admin-content { padding: 34px 32px 48px; }
 .sidebar-overlay { display: none; }
 .mobile-only { display: none; }
 .fade-enter-active, .fade-leave-active { transition: opacity 160ms ease; }

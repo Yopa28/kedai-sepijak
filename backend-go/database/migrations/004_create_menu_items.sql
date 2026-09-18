@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS menu_items (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT UNSIGNED NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(12,2) NOT NULL DEFAULT 0,
+    image_url TEXT,
+    is_available BOOLEAN NOT NULL DEFAULT TRUE,
+    is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_menu_items_category
+        FOREIGN KEY (category_id)
+        REFERENCES menu_categories(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);

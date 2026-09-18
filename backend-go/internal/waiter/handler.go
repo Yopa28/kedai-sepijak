@@ -30,9 +30,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"data": gin.H{
-			"waiters": waiters,
-		},
+		"data":    waiters,
 	})
 }
 

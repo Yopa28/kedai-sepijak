@@ -9,8 +9,11 @@
       </p>
     </div>
 
-    <div class="relative w-full h-2 bg-secondary-sage/30 rounded-full my-4">
-      <div class="absolute flex justify-between w-full -top-3"></div>
+    <div class="feedback-progress" aria-label="Progress feedback">
+      <div v-for="step in 3" :key="step" class="feedback-step" :class="{ active: currentStep >= step, complete: currentStep > step }">
+        <span>{{ currentStep > step ? '✓' : `0${step}` }}</span>
+        <i v-if="step < 3"></i>
+      </div>
     </div>
 
     <form @submit.prevent="handleSubmit" class="flex flex-col gap-6 mt-8">
@@ -163,7 +166,7 @@
         :disabled="isSubmitting || !formData.voluntary_consent"
       >
         <span v-if="!isSubmitting">Kirim Penilaian</span>
-        <span v-else>Sending...</span>
+        <span v-else>Mengirim feedback...</span>
       </button>
     </form>
   </div>
@@ -217,6 +220,16 @@ export default {
     },
     isCleaningRole() {
       return this.formData.role === 'Petugas Kebersihan';
+    },
+    currentStep() {
+      if (!this.formData.role) return 1;
+      const ratings = this.formData.ratings;
+      const hasRating = this.isServiceRole
+        ? ratings.pelayanan.sikap_pelayan && ratings.pelayanan.waktu_pesanan
+        : this.isMenuRole
+          ? ratings.menu.rasa_menu
+          : ratings.kebersihan;
+      return hasRating ? 3 : 2;
     }
   },
   methods: {
@@ -342,6 +355,12 @@ export default {
 </script>
 
 <style scoped>
+.feedback-progress { display: flex; align-items: center; width: 100%; margin: 4px 0 8px; }
+.feedback-step { display: flex; flex: 1; align-items: center; gap: 8px; color: #98a79d; font-size: 11px; font-weight: 750; }
+.feedback-step:last-child { flex: 0 0 auto; }
+.feedback-step span { display: grid; height: 27px; width: 27px; flex: 0 0 auto; place-items: center; border: 1px solid #c6d3c1; border-radius: 50%; background: #fff; }
+.feedback-step i { height: 1px; width: 100%; margin-right: 8px; background: #c6d3c1; }
+.feedback-step.active { color: #164c3b; }.feedback-step.active span { border-color: #164c3b; background: #164c3b; color: #fff; }.feedback-step.complete span { background: #d9a441; border-color: #d9a441; color: #164c3b; }.feedback-step.complete i { background: #d9a441; }
 .rating-stars label {
   font-size: 2.5rem; /* Ukuran bintang diperbesar sedikit biar enak di klik */
   cursor: pointer;

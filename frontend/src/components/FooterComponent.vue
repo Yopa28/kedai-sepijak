@@ -256,19 +256,23 @@ export default {
             quickLinks: [
                 {
                     name: "Home",
-                    href: "#",
+                    href: "/",
                 },
                 {
                     name: "Menu",
-                    href: "#menu",
+                    href: "/menu",
                 },
                 {
                     name: "Feedback",
-                    href: "#feedback",
+                    href: "/feedback",
+                },
+                {
+                    name: "Polling",
+                    href: "/polling",
                 },
                 {
                     name: "Contact",
-                    href: "#contact",
+                    href: "/#contact",
                 },
             ],
 

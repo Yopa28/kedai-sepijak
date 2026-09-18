@@ -3,34 +3,18 @@
         <!-- ========================================
              HERO SECTION (Lebih menyatu dengan tema)
         ========================================= -->
-        <div class="relative overflow-hidden bg-primary-green pt-24 pb-16">
-            <!-- Ornamen Background -->
-            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0); background-size: 24px 24px;"></div>
-            
-            <!-- Glow effect -->
-            <div class="absolute -top-32 left-1/2 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-accent-amber/[0.08] blur-[100px] pointer-events-none"></div>
-            
-            <div class="relative container mx-auto px-6 text-center z-10">
-                <div class="max-w-4xl mx-auto" data-aos="fade-up">
-                    <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-background-beige mb-3 leading-tight tracking-tight">
-                        Daftar Menu
-                        <span class="block text-accent-amber mt-2">Kedai Sepijak</span>
-                    </h1>
-                    
-                    <div class="mt-8 flex justify-center">
-                        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-5 py-2 border border-white/15">
-                            <span class="w-2 h-2 rounded-full bg-accent-amber animate-pulse"></span>
-                            <span class="text-background-beige/90 font-medium text-sm tracking-wide">{{ menuItems.length }} Menu Tersedia</span>
-                        </div>
-                    </div>
-                </div>
+        <div class="menu-page-hero">
+            <div class="container mx-auto max-w-7xl px-6">
+                <p class="menu-kicker">Menu</p>
+                <h1 class="menu-page-title">Apa yang ingin<br /><em>kamu nikmati hari ini?</em></h1>
+                <p class="menu-page-intro">Kopi, minuman segar, dan sajian hangat dari dapur Kedai Sepijak.</p>
             </div>
         </div>
 
         <!-- ========================================
              STICKY NAVIGATION & SEARCH BAR
         ========================================= -->
-        <div class="sticky top-0 z-30 bg-background-beige/90 backdrop-blur-xl border-b border-primary-green/10 shadow-sm transition-all">
+        <div class="sticky top-0 z-30 border-b border-primary-green/15 bg-background-beige transition-all">
             <div class="container mx-auto px-4 sm:px-6 py-4">
                 <div class="flex flex-col md:flex-row gap-4 items-center justify-between max-w-7xl mx-auto">
                     
@@ -40,10 +24,10 @@
                             v-for="category in categories"
                             :key="category"
                             @click="selectedCategory = category"
-                            class="snap-start whitespace-nowrap rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300"
+                            class="menu-category-tab snap-start whitespace-nowrap px-1 py-2 text-sm font-semibold transition-all duration-300"
                             :class="selectedCategory === category
-                                ? 'bg-primary-green text-accent-amber shadow-md'
-                                : 'bg-white text-primary-green/70 hover:bg-primary-green hover:text-white border border-primary-green/15'"
+                                ? 'active'
+                                : ''"
                         >
                             {{ category }}
                         </button>
@@ -51,14 +35,14 @@
 
                     <!-- Search Bar -->
                     <div class="w-full md:w-1/3 relative">
-                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary-green/50 text-xl pointer-events-none">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary-green/50 text-xl pointer-events-none">
                             search
                         </span>
                         <input 
                             v-model="searchQuery" 
                             type="text" 
-                            placeholder="Cari menu favoritmu..." 
-                            class="w-full bg-white border border-primary-green/15 rounded-full py-2.5 pl-11 pr-4 text-sm text-primary-green focus:outline-none focus:ring-2 focus:ring-accent-amber/50 focus:border-accent-amber transition-all shadow-sm"
+                            placeholder="Cari kopi, makanan, atau minuman..." 
+                            class="w-full border-b border-primary-green/30 bg-transparent py-2.5 pl-10 pr-4 text-sm text-primary-green focus:outline-none focus:border-accent-amber transition-all"
                         >
                     </div>
                 </div>
@@ -75,7 +59,10 @@
                     {{ searchQuery ? 'Hasil Pencarian' : selectedCategory }}
                 </h2>
                 <div class="h-px flex-1 bg-gradient-to-r from-accent-amber/50 to-transparent"></div>
+                <span class="text-xs font-semibold text-primary-green/55">{{ filteredMenuItems.length }} hasil</span>
             </div>
+
+            <p v-else class="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-primary-green/50">{{ menuItems.length }} pilihan tersedia</p>
 
             <TransitionGroup 
                 tag="div" 
@@ -85,16 +72,16 @@
                 <div
                     v-for="item in filteredMenuItems"
                     :key="item.id"
-                    class="group relative bg-white rounded-2xl p-6 shadow-sm border border-primary-green/5 hover:shadow-[0_20px_40px_-15px_rgba(20,40,30,0.15)] transition-all duration-300 flex flex-col h-full hover:-translate-y-1 overflow-hidden"
+                    class="menu-list-item group relative flex flex-col h-full border-b border-primary-green/15 py-5 transition-all duration-300"
                 >
                     <!-- Aksen garis vertikal di sebelah kiri saat hover -->
-                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-accent-amber scale-y-0 origin-bottom transition-transform duration-300 group-hover:scale-y-100"></div>
+                    <div class="absolute left-0 top-5 bottom-5 w-0.5 bg-accent-amber scale-y-0 origin-bottom transition-transform duration-300 group-hover:scale-y-100"></div>
 
                     <div class="flex flex-col h-full z-10">
                         <div class="mb-4">
                             <!-- Label Kategori -->
-                            <span class="inline-block px-2.5 py-1 text-[9px] font-bold tracking-[0.15em] text-accent-amber uppercase bg-primary-green rounded-md mb-3">
-                                {{ item.category }}
+                            <span class="inline-block text-[9px] font-bold tracking-[0.15em] text-accent-amber uppercase mb-2">
+                                {{ item.category === 'Signature Coffee' ? 'Signature Sepijak' : item.category }}
                             </span>
                             
                             <h3 class="font-display font-bold text-lg text-primary-green group-hover:text-accent-amber transition-colors leading-snug">
@@ -113,7 +100,7 @@
                             </span>
                             
                             <!-- Ikon panah mikro interaksi -->
-                            <span class="material-symbols-outlined text-primary-green/20 group-hover:text-accent-amber transition-colors duration-300 group-hover:translate-x-1">
+                            <span class="material-symbols-outlined text-primary-green/30 group-hover:text-accent-amber transition-colors duration-300 group-hover:translate-x-1">
                                 arrow_forward
                             </span>
                         </div>
@@ -126,8 +113,8 @@
                 <span class="material-symbols-outlined text-6xl text-primary-green/20 mb-4 block">
                     search_off
                 </span>
-                <h3 class="font-display text-2xl font-bold text-primary-green mb-2">Menu tidak ditemukan</h3>
-                <p class="text-text-charcoal/60">Maaf, kami tidak dapat menemukan menu "{{ searchQuery }}".<br>Silakan coba kata kunci lain atau pilih kategori yang tersedia.</p>
+                <h3 class="font-display text-2xl font-bold text-primary-green mb-2">Belum menemukan menu yang cocok.</h3>
+                <p class="text-text-charcoal/60">Tidak ada menu yang cocok dengan "{{ searchQuery }}".<br>Silakan coba kata kunci lain atau pilih kategori yang tersedia.</p>
                 <button @click="resetFilter" class="mt-6 text-sm font-bold text-accent-amber hover:text-primary-green underline underline-offset-4 transition-colors">
                     Kembali ke Semua Menu
                 </button>
@@ -284,6 +271,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
+ .menu-page-hero { background: #164c3b; padding: 145px 0 78px; color: #faf9f5; }
+ .menu-kicker { margin: 0 0 18px; color: #d9a441; font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+ .menu-page-title { margin: 0; font-family: Georgia, serif; font-size: clamp(42px, 6vw, 76px); font-weight: 700; letter-spacing: -.055em; line-height: .96; }
+ .menu-page-title em { color: #d9a441; font-weight: 400; }
+ .menu-page-intro { max-width: 390px; margin: 24px 0 0; color: rgba(250,249,245,.72); font-size: 14px; line-height: 1.7; }
+ .menu-category-tab { position: relative; color: rgba(22,76,59,.55); }
+ .menu-category-tab::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: #d9a441; content: ''; transform: scaleX(0); transition: transform .2s ease; }
+ .menu-category-tab:hover, .menu-category-tab.active { color: #164c3b; }
+ .menu-category-tab.active::after { transform: scaleX(1); }
+ .menu-list-item:hover { padding-left: 13px; }
+ .menu-list-item h3 { font-family: Georgia, serif; }
+ .menu-list-item p { color: rgba(27,33,29,.62); }
 /* Utilitas untuk menyembunyikan scrollbar tapi tetap bisa di-scroll */
 .hide-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */

@@ -106,26 +106,6 @@
                         </ul>
                     </div>
 
-                    <!-- STATS SECTION -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                        <div class="text-center p-4 bg-white rounded-xl shadow-sm border border-primary-green/5" data-aos="fade-up" data-aos-delay="100">
-                            <div class="text-2xl font-bold text-accent-amber mb-1">1000+</div>
-                            <div class="text-xs text-text-charcoal/70">Umpan Balik Diterima</div>
-                        </div>
-                        <div class="text-center p-4 bg-white rounded-xl shadow-sm border border-primary-green/5" data-aos="fade-up" data-aos-delay="200">
-                            <div class="text-2xl font-bold text-accent-amber mb-1">4.6</div>
-                            <div class="text-xs text-text-charcoal/70">Rating Rata-Rata</div>
-                        </div>
-                        <div class="text-center p-4 bg-white rounded-xl shadow-sm border border-primary-green/5" data-aos="fade-up" data-aos-delay="300">
-                            <div class="text-2xl font-bold text-accent-amber mb-1">95%</div>
-                            <div class="text-xs text-text-charcoal/70">Tingkat Kepuasan</div>
-                        </div>
-                        <div class="text-center p-4 bg-white rounded-xl shadow-sm border border-primary-green/5" data-aos="fade-up" data-aos-delay="400">
-                            <div class="text-2xl font-bold text-accent-amber mb-1">24h</div>
-                            <div class="text-xs text-text-charcoal/70">Waktu Tanggapan</div>
-                        </div>
-                    </div>
-
                     <!-- OTHER OPTIONS -->
                     <div class="text-center" data-aos="fade-up" data-aos-delay="800">
                         <p class="text-sm text-text-charcoal/70 mb-4">

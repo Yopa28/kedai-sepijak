@@ -236,11 +236,10 @@ func Setup(r *gin.Engine, db *sql.DB, jwtSecret string) {
 		// =========================
 		// WAITERS
 		// =========================
-		api.GET(
-			"/waiters",
-			middleware.AuthRequired(jwtSecret),
-			waiterHandler.GetAll,
-		)
+		api.GET("/waiters", middleware.AuthRequired(jwtSecret), waiterHandler.GetAll)
+		api.POST("/waiters", middleware.AuthRequired(jwtSecret), waiterHandler.Create)
+		api.PUT("/waiters/:id", middleware.AuthRequired(jwtSecret), waiterHandler.Update)
+		api.DELETE("/waiters/:id", middleware.AuthRequired(jwtSecret), waiterHandler.Delete)
 	}
 
 }

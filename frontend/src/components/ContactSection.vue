@@ -119,6 +119,11 @@
                             >
                                 {{ contactInfo.hours }}
                             </p>
+
+                            <p :class="['mt-3 pl-7 text-xs font-semibold', isOpenNow ? 'text-[#287a52]' : 'text-text-charcoal/55']">
+                                <span class="mr-1 inline-block h-1.5 w-1.5 rounded-full" :class="isOpenNow ? 'bg-[#287a52]' : 'bg-text-charcoal/35'"></span>
+                                {{ isOpenNow ? 'Buka sekarang · Tutup pukul 01.00' : 'Tutup sekarang · Buka pukul 08.00' }}
+                            </p>
                         </div>
 
 
@@ -161,10 +166,10 @@
                             :href="googleMapsUrl"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="group inline-flex items-center gap-3 border-b border-primary-green pb-1 font-body text-sm font-semibold text-primary-green transition-all hover:border-accent-amber hover:text-accent-amber"
+                            class="group inline-flex items-center gap-3 bg-primary-green px-4 py-3 font-body text-sm font-semibold text-background-beige transition-all hover:bg-accent-amber hover:text-primary-green"
                         >
                             <span>
-                                Petunjuk arah ke Kedai Sepijak
+                                Dapatkan Arah
                             </span>
 
                             <span
@@ -174,6 +179,15 @@
                             </span>
                         </a>
                     </div>
+
+                    <a
+                        :href="googleMapsUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-primary-green underline decoration-primary-green/30 underline-offset-4 transition-colors hover:text-accent-amber"
+                    >
+                        Buka di Google Maps <span aria-hidden="true">↗</span>
+                    </a>
 
                 </div>
 
@@ -249,7 +263,27 @@ export default {
 
             mapUrl:
                 "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.3!2d109.2374172!3d-7.4124204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655f59420e3035%3A0x579acae6beb46848!2sKEDAI%20SEPIJAK%20%7C%20Purwokerto!5e0!3m2!1sen!2sid!4v1732000000000!5m2!1sen!2sid",
+
+            statusTimer: null,
         };
+    },
+
+    computed: {
+        isOpenNow() {
+            const now = new Date();
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            return minutes >= 8 * 60 || minutes < 60;
+        },
+    },
+
+    mounted() {
+        this.statusTimer = window.setInterval(() => {
+            this.$forceUpdate();
+        }, 60 * 1000);
+    },
+
+    beforeUnmount() {
+        window.clearInterval(this.statusTimer);
     },
 };
 </script>

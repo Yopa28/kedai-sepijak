@@ -144,39 +144,6 @@
                         </ul>
                     </div>
 
-                    <!-- PREVIOUS EVENTS -->
-                    <div class="mt-12" data-aos="fade-up" data-aos-delay="900">
-                        <h3 class="font-display text-2xl font-bold text-primary-green mb-6 text-center">
-                            Arsip Acara Sebelumnya
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-primary-green/5 hover:shadow-md transition-all">
-                                <div class="text-3xl mb-3">🎸</div>
-                                <h4 class="font-bold text-primary-green mb-1">Acoustic Night</h4>
-                                <p class="text-xs text-text-charcoal/60 mb-4">Pertunjukan musik langsung bersama artis lokal.</p>
-                                <div class="text-[11px] font-bold text-accent-amber uppercase tracking-wider">
-                                    Pemenang - Maret 2026
-                                </div>
-                            </div>
-                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-primary-green/5 hover:shadow-md transition-all">
-                                <div class="text-3xl mb-3">☕</div>
-                                <h4 class="font-bold text-primary-green mb-1">Coffee Cupping</h4>
-                                <p class="text-xs text-text-charcoal/60 mb-4">Sesi uji cita rasa kopi eksklusif bersama barista.</p>
-                                <div class="text-[11px] font-bold text-accent-amber uppercase tracking-wider">
-                                    Pemenang - Februari 2026
-                                </div>
-                            </div>
-                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-primary-green/5 hover:shadow-md transition-all">
-                                <div class="text-3xl mb-3">📚</div>
-                                <h4 class="font-bold text-primary-green mb-1">Book Club Night</h4>
-                                <p class="text-xs text-text-charcoal/60 mb-4">Diskusi buku santai dipadu secangkir kopi hangat.</p>
-                                <div class="text-[11px] font-bold text-accent-amber uppercase tracking-wider">
-                                    Pemenang - Januari 2026
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- OTHER OPTIONS -->
                     <div class="mt-16 text-center" data-aos="fade-up" data-aos-delay="1000">
                         <p class="text-sm text-text-charcoal/70 mb-4">

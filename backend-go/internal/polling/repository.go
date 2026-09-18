@@ -48,12 +48,9 @@ func (r *Repository) FindAllPolls() ([]Poll, error) {
 			return nil, fmt.Errorf("scan poll: %w", err)
 		}
 
-		options, err := r.FindOptionsByPollID(poll.ID)
-		if err != nil {
+		if err := r.attachResults(&poll); err != nil {
 			return nil, err
 		}
-
-		poll.Options = options
 
 		polls = append(polls, poll)
 	}
@@ -95,12 +92,9 @@ func (r *Repository) FindActivePolls() ([]Poll, error) {
 			return nil, fmt.Errorf("scan active poll: %w", err)
 		}
 
-		options, err := r.FindOptionsByPollID(poll.ID)
-		if err != nil {
+		if err := r.attachResults(&poll); err != nil {
 			return nil, err
 		}
-
-		poll.Options = options
 
 		polls = append(polls, poll)
 	}
@@ -138,12 +132,9 @@ func (r *Repository) FindPollByID(id uint64) (Poll, error) {
 		return poll, fmt.Errorf("find poll: %w", err)
 	}
 
-	options, err := r.FindOptionsByPollID(poll.ID)
-	if err != nil {
+	if err := r.attachResults(&poll); err != nil {
 		return poll, err
 	}
-
-	poll.Options = options
 
 	return poll, nil
 }
@@ -155,20 +146,30 @@ func (r *Repository) FindPollByID(id uint64) (Poll, error) {
 func (r *Repository) FindOptionsByPollID(pollID uint64) ([]PollOption, error) {
 	rows, err := r.db.Query(`
 		SELECT
-			id,
-			poll_id,
-			option_text
-		FROM poll_options
-		WHERE poll_id = ?
-		ORDER BY id ASC
+			po.id,
+			po.poll_id,
+			po.option_text,
+			COUNT(pv.id) AS votes
+		FROM poll_options po
+		LEFT JOIN poll_votes pv
+			ON pv.option_id = po.id
+			AND pv.poll_id = po.poll_id
+		WHERE po.poll_id = ?
+		GROUP BY
+			po.id,
+			po.poll_id,
+			po.option_text
+		ORDER BY po.id ASC
 	`, pollID)
 
 	if err != nil {
 		return nil, fmt.Errorf("find poll options: %w", err)
 	}
+
 	defer rows.Close()
 
 	options := make([]PollOption, 0)
+	totalVotes := 0
 
 	for rows.Next() {
 		var option PollOption
@@ -177,15 +178,26 @@ func (r *Repository) FindOptionsByPollID(pollID uint64) ([]PollOption, error) {
 			&option.ID,
 			&option.PollID,
 			&option.OptionText,
+			&option.Votes,
 		); err != nil {
 			return nil, fmt.Errorf("scan poll option: %w", err)
 		}
 
+		totalVotes += option.Votes
 		options = append(options, option)
 	}
 
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("iterate poll options: %w", err)
+	}
+
+	for i := range options {
+		if totalVotes > 0 {
+			options[i].Percentage =
+				float64(options[i].Votes) / float64(totalVotes) * 100
+		} else {
+			options[i].Percentage = 0
+		}
 	}
 
 	return options, nil
@@ -209,10 +221,10 @@ func (r *Repository) FindOptionByID(optionID uint64) (PollOption, error) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return option, fmt.Errorf("option tidak ditemukan")
+			return option, fmt.Errorf("opsi polling tidak ditemukan")
 		}
 
-		return option, fmt.Errorf("find option: %w", err)
+		return option, fmt.Errorf("find poll option: %w", err)
 	}
 
 	return option, nil
@@ -455,7 +467,7 @@ func (r *Repository) HasVoted(
 }
 
 func (r *Repository) CreateVote(vote *PollVote) error {
-	_, err := r.db.Exec(`
+	result, err := r.db.Exec(`
 		INSERT INTO poll_votes (
 			poll_id,
 			option_id,
@@ -475,6 +487,16 @@ func (r *Repository) CreateVote(vote *PollVote) error {
 	if err != nil {
 		return fmt.Errorf("create vote: %w", err)
 	}
+
+	// Ambil ID vote yang baru dibuat.
+	// Ini penting karena service akan menggunakan vote.ID
+	// untuk mengambil kembali data vote tersebut.
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get vote ID: %w", err)
+	}
+
+	vote.ID = uint64(id)
 
 	return nil
 }
@@ -532,6 +554,7 @@ func (r *Repository) GetPollResults(pollID uint64) ([]PollResult, error) {
 		FROM poll_options o
 		LEFT JOIN poll_votes v
 			ON v.option_id = o.id
+			AND v.poll_id = o.poll_id
 		WHERE o.poll_id = ?
 		GROUP BY
 			o.id,
@@ -542,6 +565,7 @@ func (r *Repository) GetPollResults(pollID uint64) ([]PollResult, error) {
 	if err != nil {
 		return nil, fmt.Errorf("get poll results: %w", err)
 	}
+
 	defer rows.Close()
 
 	results := make([]PollResult, 0)
@@ -560,7 +584,6 @@ func (r *Repository) GetPollResults(pollID uint64) ([]PollResult, error) {
 		}
 
 		totalVotes += result.VoteCount
-
 		results = append(results, result)
 	}
 
@@ -599,6 +622,7 @@ func (r *Repository) FindVotesByPollID(pollID uint64) ([]PollVote, error) {
 	if err != nil {
 		return nil, fmt.Errorf("find poll votes: %w", err)
 	}
+
 	defer rows.Close()
 
 	votes := make([]PollVote, 0)
@@ -689,6 +713,10 @@ func (r *Repository) GetStatistics() (PollStatistics, error) {
 
 	return stats, nil
 }
+
+// =========================
+// ATTACH RESULTS
+// =========================
 
 func (r *Repository) attachResults(poll *Poll) error {
 	results, err := r.GetPollResults(poll.ID)

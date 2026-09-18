@@ -111,10 +111,10 @@
         <div class="px-6 py-4">
           <div class="space-y-3">
             <div
-              v-for="option in poll.options"
-              :key="option.id"
-              class="relative"
-            >
+  v-for="option in (poll.options || [])"
+  :key="option.id"
+  class="relative"
+>
               <div class="flex items-center justify-between mb-1">
                 <span class="text-sm font-medium text-gray-700">{{ option.option_text || 'Opsi tidak valid' }}</span>
                 <span class="text-sm font-semibold text-gray-900">
@@ -522,28 +522,39 @@ const pollForm = ref({
 
 // Computed
 const filteredPolls = computed(() => {
-  // Pastiin polls.value selalu array
-  let result = Array.isArray(polls.value) ? polls.value : []
+  let result = Array.isArray(polls.value)
+    ? [...polls.value]
+    : []
 
+  // Filter status
   if (filters.value.status) {
     const isActive = filters.value.status === 'active'
-    result = result.filter(p => !!p.is_active === isActive)
+
+    result = result.filter(
+      poll => Boolean(poll?.is_active) === isActive
+    )
   }
 
+  // Filter pencarian
   if (filters.value.search?.trim()) {
-    const s = filters.value.search.toLowerCase()
-    result = result.filter(p => (p.question || '').toLowerCase().includes(s))
+    const search = filters.value.search
+      .trim()
+      .toLowerCase()
+
+    result = result.filter(poll =>
+      String(poll?.question || '')
+        .toLowerCase()
+        .includes(search)
+    )
   }
 
-  // Pastiin result selalu array sebelum sort
-  if (!Array.isArray(result)) {
-    result = []
-  }
+  // Sort terbaru
+  return result.sort((a, b) => {
+    const dateA = new Date(a?.created_at || 0).getTime()
+    const dateB = new Date(b?.created_at || 0).getTime()
 
-  // Tambahkan pengecekan untuk created_at biar gak error di sort
-  return result
-    .filter(p => p && p.hasOwnProperty('created_at')) // Pastiin item punya created_at
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    return dateB - dateA
+  })
 })
 
 // Methods
@@ -762,31 +773,71 @@ async function loadPolls() {
   try {
     loading.value = true
 
-    // Ambil data polling lewat fungsi apiListPolls
-    // Karena fungsi listPolls di pollingAPI.js udah diubah,
-    // sekarang harusnya return array kalo sukses
-    const data = await apiListPolls()
+    const response = await apiListPolls()
 
-    // Cek apakah data adalah array (berarti sukses)
-    if (Array.isArray(data)) {
-      polls.value = data
-      console.log('Polls loaded successfully:', polls.value); // Tambahin log ini
-      console.log('Is polls.value an array?', Array.isArray(polls.value)); // Tambahin log ini
-      console.log('First poll data:', polls.value[0]); // Tambahin log ini buat cek isi array
-    } else {
-      // Jika bukan array (kemungkinan besar object error dari handleApiError di pollingAPI.js)
-      polls.value = []
-      console.warn('Data polling bukan array (kemungkinan error):', data)
-      // Opsional: tampilkan error ke user berdasarkan pesan dari API
-      alert(data?.message || 'Gagal memuat polling.')
+    console.log('[AdminPolls] Raw polling response:', response)
+
+    let data = []
+
+    /*
+     * Handle beberapa kemungkinan bentuk response:
+     *
+     * 1. Array langsung
+     * [
+     *   { id: 1, question: '...' }
+     * ]
+     *
+     * 2. { data: [...] }
+     *
+     * 3. { success: true, data: [...] }
+     *
+     * 4. { data: { polls: [...] } }
+     */
+    if (Array.isArray(response)) {
+      data = response
+    } else if (Array.isArray(response?.data)) {
+      data = response.data
+    } else if (Array.isArray(response?.polls)) {
+      data = response.polls
+    } else if (Array.isArray(response?.data?.polls)) {
+      data = response.data.polls
     }
 
+    console.log('[AdminPolls] Normalized polling data:', data)
+    console.log('[AdminPolls] Total polling:', data.length)
+
+    // Pastikan setiap polling punya options array
+    polls.value = data
+      .filter(Boolean)
+      .map(poll => ({
+        ...poll,
+
+        options: Array.isArray(poll.options)
+          ? poll.options
+          : [],
+
+        total_votes: Number(poll.total_votes || 0),
+
+        is_active: Boolean(poll.is_active)
+      }))
+
+    console.log(
+      '[AdminPolls] polls.value:',
+      polls.value
+    )
+
   } catch (e) {
-    // Ini cuma ke trigger kalo ada error di luar handleApiResponse/handleApiError
-    // atau error syntax
-    console.error('Load polls error (catch):', e)
+    console.error(
+      '[AdminPolls] Load polls error:',
+      e
+    )
+
     polls.value = []
-    alert(e.message || 'Gagal memuat polling.')
+
+    alert(
+      e?.message ||
+      'Gagal memuat polling.'
+    )
   } finally {
     loading.value = false
   }

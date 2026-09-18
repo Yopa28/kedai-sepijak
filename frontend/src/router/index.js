@@ -7,17 +7,18 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 
 // Import public views
-import Home from "../views/Home.vue";
-import FeedbackPage from "../views/FeedbackPage.vue";
-import PollingPage from "../views/PollingPage.vue";
+import Home from "../views/HomeEditorial.vue";
+import FeedbackPage from "../views/FeedbackEditorial.vue";
+import PollingPage from "../views/PollingEditorial.vue";
 import MenuPage from "../views/MenuPage.vue";
+import NotFound from "../views/NotFound.vue";
 
 // Import public feedback submission
 // import PublicFeedback from "../views/public/PublicFeedback.vue"; // TODO: Create this file
 
 // Import admin views (lazy loading for better performance)
-import AdminLogin from "../views/admin/AdminLogin.vue";
-import AdminLayout from "../views/admin/AdminLayout.vue";
+import AdminLogin from "../views/admin/AdminLoginTail.vue";
+import AdminLayout from "../views/admin/AdminLayoutTail.vue";
 // Other admin views will be lazy loaded
 
 const routes = [
@@ -29,8 +30,8 @@ const routes = [
     name: "Home",
     component: Home,
     meta: {
-      title: "Kedai Sepijak - Home",
-      description: "Kedai kopi tradisional di Purwokerto",
+      title: "Kedai Sepijak — Coffee, Food & Space in Purwokerto",
+      description: "Kopi, makanan, dan ruang untuk setiap cerita di Purwokerto.",
     },
   },
   {
@@ -38,8 +39,8 @@ const routes = [
     name: "Feedback",
     component: FeedbackPage,
     meta: {
-      title: "Feedback - Kedai Sepijak",
-      description: "Share your experience and feedback",
+      title: "Feedback — Kedai Sepijak",
+      description: "Bagikan pengalamanmu di Kedai Sepijak.",
     },
   },
   {
@@ -47,8 +48,8 @@ const routes = [
     name: "Polling",
     component: PollingPage,
     meta: {
-      title: "Polling Event - Kedai Sepijak",
-      description: "Vote for the next event at Kedai Sepijak",
+      title: "Polling — Kedai Sepijak",
+      description: "Ikut menentukan acara berikutnya di Kedai Sepijak.",
     },
   },
   {
@@ -56,8 +57,8 @@ const routes = [
     name: "Menu",
     component: MenuPage,
     meta: {
-      title: "Menu Lengkap - Kedai Sepijak",
-      description: "Lihat semua menu kopi, makanan, dan minuman di Kedai Sepijak",
+      title: "Menu — Kedai Sepijak Purwokerto",
+      description: "Lihat kopi, minuman, dan makanan dari Kedai Sepijak.",
     },
   },
   // Temporarily disabled until PublicFeedback.vue is created
@@ -98,7 +99,7 @@ const routes = [
       {
         path: "dashboard",
         name: "AdminDashboard",
-        component: () => import("../views/admin/AdminDashboard.vue"),
+        component: () => import("../views/admin/AdminDashboardTail.vue"),
         meta: {
           title: "Dashboard - Kedai Sepijak Admin",
           requiresAuth: true,
@@ -149,7 +150,11 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    redirect: "/",
+    component: NotFound,
+    meta: {
+      title: "Halaman Tidak Ditemukan - Kedai Sepijak",
+      description: "Halaman yang Anda cari tidak tersedia.",
+    },
   },
 ];
 
@@ -162,6 +167,7 @@ const router = createRouter({
     } else if (to.hash) {
       return {
         el: to.hash,
+        top: 84,
         behavior: "smooth",
       };
     } else {

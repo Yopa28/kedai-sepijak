@@ -58,25 +58,63 @@ func NewAnalyticsRepository(db *sql.DB) *AnalyticsRepository {
 	}
 }
 
+// GetSentimentAnalytics mengambil statistik sentiment dan daftar feedback.
+//
+// Jika startDate atau endDate kosong, digunakan default:
+// - startDate: 30 hari terakhir
+// - endDate: hari ini
 func (r *AnalyticsRepository) GetSentimentAnalytics(
 	startDate string,
 	endDate string,
 ) (SentimentAnalyticsResponse, error) {
+
 	var response SentimentAnalyticsResponse
+
+	// Default date range: 30 hari terakhir sampai hari ini.
+	if startDate == "" {
+		startDate = time.Now().AddDate(0, 0, -30).Format("2006-01-02")
+	}
+
+	if endDate == "" {
+		endDate = time.Now().Format("2006-01-02")
+	}
+
+	// =========================
+	// SENTIMENT SUMMARY
+	// =========================
 
 	query := `
 		SELECT
 			COUNT(*) AS total,
-			SUM(CASE WHEN LOWER(sentiment) = 'positive' THEN 1 ELSE 0 END),
-			SUM(CASE WHEN LOWER(sentiment) = 'negative' THEN 1 ELSE 0 END),
-			SUM(CASE
-				WHEN LOWER(sentiment) = 'neutral'
-					OR sentiment IS NULL
-					OR LOWER(sentiment) NOT IN ('positive', 'negative')
-				THEN 1
-				ELSE 0
-			END)
+
+			SUM(
+				CASE
+					WHEN LOWER(sentiment) = 'positive'
+					THEN 1
+					ELSE 0
+				END
+			) AS positive,
+
+			SUM(
+				CASE
+					WHEN LOWER(sentiment) = 'negative'
+					THEN 1
+					ELSE 0
+				END
+			) AS negative,
+
+			SUM(
+				CASE
+					WHEN LOWER(sentiment) = 'neutral'
+						OR sentiment IS NULL
+						OR LOWER(sentiment) NOT IN ('positive', 'negative')
+					THEN 1
+					ELSE 0
+				END
+			) AS neutral
+
 		FROM feedback
+
 		WHERE DATE(created_at) BETWEEN ? AND ?
 	`
 
@@ -107,6 +145,7 @@ func (r *AnalyticsRepository) GetSentimentAnalytics(
 		Neutral:  neutral,
 	}
 
+	// Hitung persentase hanya jika ada feedback.
 	if total > 0 {
 		response.SentimentAnalysis.Percentages = SentimentPercentage{
 			Positive: float64(positive) / float64(total) * 100,
@@ -114,6 +153,10 @@ func (r *AnalyticsRepository) GetSentimentAnalytics(
 			Neutral:  float64(neutral) / float64(total) * 100,
 		}
 	}
+
+	// =========================
+	// FEEDBACK LIST
+	// =========================
 
 	feedbackQuery := `
 		SELECT
@@ -124,8 +167,11 @@ func (r *AnalyticsRepository) GetSentimentAnalytics(
 			category,
 			sentiment,
 			created_at
+
 		FROM feedback
+
 		WHERE DATE(created_at) BETWEEN ? AND ?
+
 		ORDER BY created_at DESC
 	`
 
@@ -141,11 +187,13 @@ func (r *AnalyticsRepository) GetSentimentAnalytics(
 			err,
 		)
 	}
+
 	defer rows.Close()
 
 	response.Feedback = make([]SentimentFeedback, 0)
 
 	for rows.Next() {
+
 		var item SentimentFeedback
 
 		if err := rows.Scan(
@@ -179,25 +227,68 @@ func (r *AnalyticsRepository) GetSentimentAnalytics(
 	return response, nil
 }
 
+// GetDailyTrend mengambil jumlah sentiment per hari.
+//
+// Jika startDate atau endDate kosong, digunakan default:
+// - startDate: 30 hari terakhir
+// - endDate: hari ini
 func (r *AnalyticsRepository) GetDailyTrend(
 	startDate string,
 	endDate string,
 ) (DailyTrend, error) {
+
+	// =========================
+	// DEFAULT DATE RANGE
+	// =========================
+
+	if startDate == "" {
+		startDate = time.Now().AddDate(0, 0, -30).Format("2006-01-02")
+	}
+
+	if endDate == "" {
+		endDate = time.Now().Format("2006-01-02")
+	}
+
+	// =========================
+	// DAILY SENTIMENT QUERY
+	// =========================
+
 	query := `
 		SELECT
-			DATE(created_at) AS feedback_date,
-			SUM(CASE WHEN LOWER(sentiment) = 'positive' THEN 1 ELSE 0 END),
-			SUM(CASE WHEN LOWER(sentiment) = 'negative' THEN 1 ELSE 0 END),
-			SUM(CASE
-				WHEN LOWER(sentiment) = 'neutral'
-					OR sentiment IS NULL
-					OR LOWER(sentiment) NOT IN ('positive', 'negative')
-				THEN 1
-				ELSE 0
-			END)
+			DATE_FORMAT(created_at, '%Y-%m-%d') AS feedback_date,
+
+			SUM(
+				CASE
+					WHEN LOWER(sentiment) = 'positive'
+					THEN 1
+					ELSE 0
+				END
+			) AS positive,
+
+			SUM(
+				CASE
+					WHEN LOWER(sentiment) = 'negative'
+					THEN 1
+					ELSE 0
+				END
+			) AS negative,
+
+			SUM(
+				CASE
+					WHEN LOWER(sentiment) = 'neutral'
+						OR sentiment IS NULL
+						OR LOWER(sentiment) NOT IN ('positive', 'negative')
+					THEN 1
+					ELSE 0
+				END
+			) AS neutral
+
 		FROM feedback
+
 		WHERE DATE(created_at) BETWEEN ? AND ?
+
 		GROUP BY DATE(created_at)
+
 		ORDER BY DATE(created_at) ASC
 	`
 
@@ -213,7 +304,12 @@ func (r *AnalyticsRepository) GetDailyTrend(
 			err,
 		)
 	}
+
 	defer rows.Close()
+
+	// =========================
+	// INITIALIZE RESPONSE
+	// =========================
 
 	trend := DailyTrend{
 		Labels:   make([]string, 0),
@@ -222,8 +318,13 @@ func (r *AnalyticsRepository) GetDailyTrend(
 		Neutral:  make([]int, 0),
 	}
 
+	// =========================
+	// READ QUERY RESULT
+	// =========================
+
 	for rows.Next() {
-		var date time.Time
+
+		var date string
 		var positive, negative, neutral int
 
 		if err := rows.Scan(
@@ -240,7 +341,7 @@ func (r *AnalyticsRepository) GetDailyTrend(
 
 		trend.Labels = append(
 			trend.Labels,
-			date.Format("2006-01-02"),
+			date,
 		)
 
 		trend.Positive = append(
